@@ -1,0 +1,120 @@
+/* Make sure the page container takes up 100% width and height */
+.sport-container {
+  display: flex;
+  flex-direction: column;
+  width: 100vw; /* 100% of the viewport width */
+  height: 100vh; /* 100% of the viewport height */
+  background-color: #e5e4db;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  background: #3949ab;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 16px;
+  align-items: center;
+}
+
+main {
+  flex: 1;
+  padding: 20px;
+  overflow: auto; /* Allows scrolling within the main content */
+  box-sizing: border-box;
+}
+
+#Sportcards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* Exactly 4 cards per row */
+  gap: 20px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.AddNew {
+  background-color: #a6a6d5;
+  border: none;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 10px;
+  width: 90px;
+  border: 1px solid black;
+}
+
+.footer {
+  background-color: #3949ab;
+  margin-top: auto;
+  padding: 20px;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.footer-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer-links {
+  margin-top: 10px;
+}
+
+.footer-links a {
+  color: white;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: black;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+li {
+  float: left;
+}
+
+li a {
+  display: block;
+  color: white;
+  padding: 25px 16px;
+  text-decoration: none;
+  font-size: 18px;
+}
+
+li a:hover {
+  color: white;
+}
+
+#add {
+  display: flex;
+  justify-content: end;
+}
+
+.card button {
+  border: none;
+  outline: 0;
+  padding: 12px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+  font-size: 18px;
+}
+
+.card button:hover {
+  opacity: 0.7;
+}
+h4 {
+  padding: 4px;
+}
