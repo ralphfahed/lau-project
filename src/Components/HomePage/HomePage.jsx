@@ -3,41 +3,104 @@ import "./HomePage.css"; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
 
 const HomePage = () => {
-  const [username, setUsername] = useState("");
+  // const [username, setUsername] = useState("");
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
+  const [userName, setUserName] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  function handleLogout() {
+  function UserMenu({ userName, onLogout }) {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+      <div style={{ position: "relative", display: "inline-block" }}>
+        <div
+          onClick={() => setIsOpen(!isOpen)}
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: "50%",
+            backgroundColor: "#3498db",
+            color: "white",
+            fontWeight: "bold",
+            fontSize: 20,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            cursor: "pointer",
+            userSelect: "none",
+          }}
+          tabIndex={0}
+          aria-haspopup="true"
+          aria-expanded={isOpen}
+        >
+          {userName.charAt(0).toUpperCase()}
+        </div>
+
+        {isOpen && (
+          <div
+            style={{
+              position: "absolute",
+              top: 45,
+              right: 0, // changed from left: 0
+              backgroundColor: "#f5f5f7",
+              borderRadius: 8,
+              padding: "12px 20px",
+              width: 180,
+              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.12)",
+              zIndex: 1000,
+              fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+              color: "#333",
+              userSelect: "none",
+            }}
+          >
+            <div style={{ marginBottom: 8, fontWeight: "bold" }}>
+              {userName}
+            </div>
+            <div
+              style={{ marginBottom: 8, cursor: "pointer", color: "#007bff" }}
+            >
+              My Projects
+            </div>
+            <div
+              onClick={onLogout}
+              style={{ cursor: "pointer", color: "red", fontWeight: "bold" }}
+            >
+              Logout
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  const handleLogout = () => {
     fetch("http://localhost:5000/logout", {
       method: "POST",
-      credentials: "include", // 🔥 Required for session clearing
-    })
-      .then((res) => {
-        if (res.ok) {
-          navigate("/login");
-        }
-      })
-      .catch((err) => console.error("Logout error:", err));
-  }
+      credentials: "include",
+    }).then(() => {
+      setUserName(null);
+      navigate("/login"); // redirect to login page after logout
+    });
+  };
 
   useEffect(() => {
     fetch("http://localhost:5000/check_auth", {
-      method: "GET",
-      credentials: "include",
+      credentials: "include", // important to send cookies
     })
       .then((res) => res.json())
       .then((data) => {
         if (data.authenticated) {
-          setUsername(data.user); // store username in state to display
-        } else {
-          setUsername("");
+          setUserName(data.user);
         }
+        setLoading(false);
       })
-      .catch((err) => {
-        console.error("Error fetching auth:", err);
-        setUsername("");
-      });
+      .catch(() => setLoading(false));
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   // on click navigate the the page and we insert the hndleclick func on the div
   const handleClick = () => {
@@ -56,10 +119,15 @@ const HomePage = () => {
             alt="Logo"
           />
         </div>
-        <div id="usermail">Welcome {username}</div>
-        <button className="logout" onClick={handleLogout}>
-          Logout
-        </button>
+        {/* <div id="usermail">Welcome {userName}</div> */}
+
+        <div>
+          {userName ? (
+            <UserMenu userName={userName} onLogout={handleLogout} />
+          ) : (
+            <a href="/login">Login</a>
+          )}
+        </div>
       </div>
 
       {/* Theme Box */}

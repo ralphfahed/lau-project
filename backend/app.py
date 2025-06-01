@@ -130,7 +130,7 @@ def login():
 @app.route("/logout", methods=["POST"])
 def logout():
     # Remove 'user' key from session to log out
-    flask_session.pop("user", None)
+    flask_session.clear()
     return jsonify({"message": "Logged out successfully!"}), 200
 
 
