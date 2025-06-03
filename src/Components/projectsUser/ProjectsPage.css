@@ -1,0 +1,65 @@
+/* Set page background */
+.projects-container {
+  background-color: #f5f5f5;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  min-height: 100vh; /* full viewport height */
+}
+
+/* Make the table full width */
+.projects-table {
+  width: 100vw; /* full viewport width */
+  max-width: 100vw; /* prevent overflow */
+  border-collapse: collapse;
+  background-color: white; /* white table background for contrast */
+  box-sizing: border-box;
+}
+
+/* Table cells */
+.projects-table th,
+.projects-table td {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+/* Header styling */
+.projects-table th {
+  background-color: #007bff;
+  color: white;
+}
+
+/* Zebra stripes */
+.projects-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Hover effect */
+.projects-table tr:hover {
+  background-color: #e6f0ff;
+  cursor: pointer;
+}
+
+/* Title styling */
+.projects-title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #333;
+  padding-left: 20px; /* Optional padding for title */
+}
+.back-button {
+  margin-left: 20px;
+  margin-bottom: 20px;
+  padding: 8px 15px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+}
+
+.back-button:hover {
+  background-color: #0056b3;
+}

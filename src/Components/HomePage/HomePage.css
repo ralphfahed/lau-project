@@ -142,3 +142,14 @@ hr {
 .footer-links a:hover {
   color: black;
 }
+
+.cardBox {
+  display: flex;
+  align-items: center;
+}
+/* When screen width is less than 700px */
+@media (max-width: 750px) {
+  #cards {
+    display: block;
+  }
+}
