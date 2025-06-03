@@ -10,26 +10,13 @@ const HomePage = () => {
   const [loading, setLoading] = useState(true);
 
   function UserMenu({ userName, onLogout }) {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = React.useState(false);
 
     return (
       <div style={{ position: "relative", display: "inline-block" }}>
         <div
           onClick={() => setIsOpen(!isOpen)}
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: "50%",
-            backgroundColor: "#3498db",
-            color: "white",
-            fontWeight: "bold",
-            fontSize: 20,
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            cursor: "pointer",
-            userSelect: "none",
-          }}
+          className="user-avatar"
           tabIndex={0}
           aria-haspopup="true"
           aria-expanded={isOpen}
@@ -38,34 +25,11 @@ const HomePage = () => {
         </div>
 
         {isOpen && (
-          <div
-            style={{
-              position: "absolute",
-              top: 45,
-              right: 0, // changed from left: 0
-              backgroundColor: "#f5f5f7",
-              borderRadius: 8,
-              padding: "12px 20px",
-              width: 180,
-              boxShadow: "0 8px 16px rgba(0, 0, 0, 0.12)",
-              zIndex: 1000,
-              fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
-              color: "#333",
-              userSelect: "none",
-            }}
-          >
-            <div style={{ marginBottom: 8, fontWeight: "bold" }}>
-              {userName}
-            </div>
-            <div
-              style={{ marginBottom: 8, cursor: "pointer", color: "#007bff" }}
-            >
-              My Projects
-            </div>
-            <div
-              onClick={onLogout}
-              style={{ cursor: "pointer", color: "red", fontWeight: "bold" }}
-            >
+          <div className="user-menu">
+            <div className="underlined-text">{userName}</div>
+
+            <div className="clickable-text">My Projects</div>
+            <div onClick={onLogout} className="logout-button">
               Logout
             </div>
           </div>

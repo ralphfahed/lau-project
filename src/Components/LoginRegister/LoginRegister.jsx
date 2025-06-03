@@ -18,6 +18,8 @@ const LoginRegister = () => {
   const [isRemembered, setIsRemembered] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
   // to navigate between pages.
   const navigate = useNavigate();
 
@@ -35,6 +37,14 @@ const LoginRegister = () => {
   //state for show/hide password
 
   const [showPassword, setShowPassword] = useState(false);
+  // On component mount, load username from localStorage if exists
+  useEffect(() => {
+    const savedUsername = localStorage.getItem("rememberedUsername");
+    if (savedUsername) {
+      setUsername(savedUsername);
+      setIsRemembered(true);
+    }
+  }, []);
 
   //Functions to update state when user types in inputs or checks checkboxes
   function handleUsername(e) {
@@ -106,10 +116,19 @@ const LoginRegister = () => {
       body: JSON.stringify({
         username,
         password,
+        remember: isRemembered,
       }),
     })
       .then((response) => {
+        setLoading(false); // Stop loading
+
         if (response.ok) {
+          // Save username to localStorage if checkbox is checked
+          if (isRemembered) {
+            localStorage.setItem("rememberedUsername", username);
+          } else {
+            localStorage.removeItem("rememberedUsername");
+          }
           navigate("/home");
         } else {
           setUserLogError("Incorrect username or password.");
@@ -117,6 +136,8 @@ const LoginRegister = () => {
         }
       })
       .catch((error) => {
+        setLoading(false); // Stop loading
+
         console.error("Error:", error);
         setUserLogError("Server error. Please try again later.");
       });
@@ -214,10 +235,13 @@ const LoginRegister = () => {
     setIsAgreed(false);
     setMessage("");
     setEmailRegister("");
-    setUserNameError("");
   }
   //function loginLink is used on click of the register => chaghleta tfade linputs
   function loginLink() {
+    // Only clear username if NOT remembered
+    if (!isRemembered) {
+      setUsername("");
+    }
     setAction("");
     setUsername("");
     setPassword("");
@@ -278,7 +302,10 @@ const LoginRegister = () => {
               </label>
               {/* <a href="#">Forgot password?</a> */}
             </div>
-            <button type="submit">Login</button>
+            <button type="submit" disabled={loading}>
+              {loading ? <div className="loader"></div> : "Login"}
+            </button>
+
             <div className="register-link">
               <p>
                 Don't have an account?{" "}

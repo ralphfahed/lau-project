@@ -24,6 +24,9 @@ engine = create_engine("sqlite:///C:/Users/User/Desktop/users_login.db")
 # Base class for model declarations using SQLAlchemy's ORM system
 Base = declarative_base()
 
+
+
+
 # Define User model mapped to 'users' table
 class User(Base):
     __tablename__ = "users"  # Table name in database
@@ -96,10 +99,10 @@ def login():
     try:
         # Parse JSON request body
         data = request.get_json()
-
         # Extract username and password
         username = data.get("username")
         password = data.get("password")
+        remember = data.get("remember", False)  # Get remember value, default to False
 
         # Validate input
         if not username or not password:
@@ -111,6 +114,7 @@ def login():
         # Check if user exists and password matches hashed password
         if user and check_password_hash(user.password, password):
             flask_session.permanent = True  # Make session permanent (1 hour lifetime)
+            flask_session.permanent = bool(remember)  # Set session lifetime based on remember
             flask_session["user"] = username  # Store username in session
             return jsonify({"message": "Login successful!"}), 200
         else:
