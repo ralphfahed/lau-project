@@ -152,4 +152,9 @@ hr {
   #cards {
     display: block;
   }
+  .footer-links {
+    display: grid;
+    padding: 10px;
+    gap: 5px;
+  }
 }

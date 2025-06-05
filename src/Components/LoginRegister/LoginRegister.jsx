@@ -39,7 +39,7 @@ const LoginRegister = () => {
   const [showPassword, setShowPassword] = useState(false);
   // On component mount, load username from localStorage if exists
   useEffect(() => {
-    const savedUsername = localStorage.getItem("rememberedUsername");
+    const savedUsername = sessionStorage.getItem("rememberedUsername");
     if (savedUsername) {
       setUsername(savedUsername);
       setIsRemembered(true);
@@ -125,9 +125,9 @@ const LoginRegister = () => {
         if (response.ok) {
           // Save username to localStorage if checkbox is checked
           if (isRemembered) {
-            localStorage.setItem("rememberedUsername", username);
+            sessionStorage.setItem("rememberedUsername", username);
           } else {
-            localStorage.removeItem("rememberedUsername");
+            sessionStorage.removeItem("rememberedUsername");
           }
           navigate("/home");
         } else {
@@ -248,6 +248,7 @@ const LoginRegister = () => {
     setUserLogError("");
     setPassLogError("");
     setIsRemembered(false);
+    sessionStorage.removeItem("rememberedUsername");
   }
 
   //<div className={wrapper ${action}}>
