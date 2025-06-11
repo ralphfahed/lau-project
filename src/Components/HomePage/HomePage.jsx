@@ -1,112 +1,20 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "./HomePage.css"; // Make sure this path is correct
 import { useNavigate } from "react-router-dom";
+import Navbar from "../layout/Navbar";
+import Footerbar from "../layout/Footerbar";
 
 const HomePage = () => {
-  // const [username, setUsername] = useState("");
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
   const navigate = useNavigate();
-  const [userName, setUserName] = useState(null);
-  const [loading, setLoading] = useState(true);
 
-  function UserMenu({ userName, onLogout }) {
-    const [isOpen, setIsOpen] = React.useState(false);
-
-    const navigate = useNavigate();
-
-    const handleProjectsClick = () => {
-      setIsOpen(false); // close menu
-      navigate("/projects"); // navigate to projects page
-    };
-
-    return (
-      <div style={{ position: "relative", display: "inline-block" }}>
-        <div
-          onClick={() => setIsOpen(!isOpen)}
-          className="user-avatar"
-          tabIndex={0}
-          aria-haspopup="true"
-          aria-expanded={isOpen}
-        >
-          {userName.charAt(0).toUpperCase()}
-        </div>
-
-        {isOpen && (
-          <div className="user-menu">
-            <div className="underlined-text">{userName}</div>
-
-            <div
-              className="clickable-text"
-              onClick={handleProjectsClick}
-              style={{ cursor: "pointer" }}
-            >
-              My Projects
-            </div>
-            <div onClick={onLogout} className="logout-button">
-              Logout
-            </div>
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  const handleLogout = () => {
-    fetch("http://localhost:5000/logout", {
-      method: "POST",
-      credentials: "include",
-    }).then(() => {
-      setUserName(null);
-      navigate("/login"); // redirect to login page after logout
-    });
-  };
-
-  useEffect(() => {
-    fetch("http://localhost:5000/check_auth", {
-      credentials: "include", // important to send cookies
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.authenticated) {
-          setUserName(data.user);
-        }
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  // on click navigate the the page and we insert the hndleclick func on the div
   const handleClick = () => {
-    navigate("/home/sport");
+    navigate("/home/sport"); // or any page you want
   };
 
   return (
-    <div className="page-container">
+    <div className="page-container-full">
       {/* Welcome Section */}
-      <div id="welcome">
-        <div id="icon">
-          <img
-            src="https://img.icons8.com/?size=100&id=ddiDblGivpG2&format=png&color=000000"
-            width="35"
-            height="35"
-            alt="Logo"
-          />
-        </div>
-        {/* <div id="usermail">Welcome {userName}</div> */}
-
-        <div>
-          {userName ? (
-            <UserMenu userName={userName} onLogout={handleLogout} />
-          ) : (
-            <a href="/login">Login</a>
-          )}
-        </div>
-      </div>
-
+      <Navbar />
       {/* Theme Box */}
       <div id="box1">
         <div id="theme">Choose your theme</div>
@@ -154,17 +62,7 @@ const HomePage = () => {
         </div>
       </div>
 
-      {/* Footer Section */}
-      <footer className="footer">
-        <div className="footer-content">
-          <p>&copy; 2025 My Website. All rights reserved.</p>
-          <div className="footer-links">
-            <a href="/privacy">Privacy</a>
-            <a href="/terms">Terms</a>
-            <a href="/contact">Contact</a>
-          </div>
-        </div>
-      </footer>
+      <Footerbar />
     </div>
   );
 };

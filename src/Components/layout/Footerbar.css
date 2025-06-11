@@ -1,0 +1,36 @@
+.footer {
+  background-color: #3949ab;
+  margin-top: auto; /* Pushes the footer to the bottom */
+  padding: 20px; /* Footer padding */
+  text-align: center; /* Center text */
+  color: #ffffff;
+}
+
+.footer-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.footer-links {
+  margin-bottom: 10px;
+}
+
+.footer-links a {
+  color: #ffffff;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: black;
+}
+
+/* When screen width is less than 700px */
+@media (max-width: 750px) {
+  .footer-links {
+    display: grid;
+    padding: 10px;
+    gap: 5px;
+  }
+}

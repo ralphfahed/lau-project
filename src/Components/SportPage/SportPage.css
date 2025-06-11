@@ -44,34 +44,6 @@ main {
   border: 1px solid black;
 }
 
-.footer {
-  background-color: #3949ab;
-  margin-top: auto;
-  padding: 20px;
-  text-align: center;
-  box-sizing: border-box;
-}
-
-.footer-content {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
-.footer-links {
-  margin-top: 10px;
-}
-
-.footer-links a {
-  color: white;
-  margin: 0 10px;
-  text-decoration: none;
-}
-
-.footer-links a:hover {
-  color: black;
-}
-
 ul {
   list-style-type: none;
   margin: 0;
