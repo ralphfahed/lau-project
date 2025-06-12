@@ -49,6 +49,7 @@ const Navbar = () => {
   }
 
   const handleLogout = () => {
+    localStorage.removeItem("auth");
     fetch("http://localhost:5000/logout", {
       method: "POST",
       credentials: "include",

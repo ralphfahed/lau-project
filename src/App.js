@@ -4,15 +4,40 @@ import HomePage from "./Components/HomePage/HomePage";
 import LoginRegister from "./Components/LoginRegister/LoginRegister";
 import SportPage from "./Components/SportPage/SportPage";
 import ProjectsPage from "./Components/projectsUser/ProjectsPage";
+import ProtectedRoute from "./Components/ProtectedRoute"; // ⬅️ Add this
 
 const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/home" element={<HomePage />} />
         <Route path="/login" element={<LoginRegister action="login" />} />
-        <Route path="/home/sport" element={<SportPage />} />
-        <Route path="/projects" element={<ProjectsPage />} />
+
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/home/sport"
+          element={
+            <ProtectedRoute>
+              <SportPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/projects"
+          element={
+            <ProtectedRoute>
+              <ProjectsPage />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

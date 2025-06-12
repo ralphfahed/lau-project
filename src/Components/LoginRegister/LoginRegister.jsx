@@ -6,11 +6,6 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 const LoginRegister = () => {
-  // Login state variables
-  //username hiye lvalue li hala2
-  //setusername hoye update value bada teje bi func
-  //usestate = chou hiye lvalue taba3 username haliyan
-  //false or true is used for rememberd or logedin
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [userLogError, setUserLogError] = useState("");
@@ -44,7 +39,11 @@ const LoginRegister = () => {
       setUsername(savedUsername);
       setIsRemembered(true);
     }
-  }, []);
+    const isLoggedIn = localStorage.getItem("auth") === "true";
+    if (isLoggedIn) {
+      navigate("/home"); // Prevent access to login when already logged in
+    }
+  }, [navigate]);
 
   //Functions to update state when user types in inputs or checks checkboxes
   function handleUsername(e) {
@@ -123,6 +122,8 @@ const LoginRegister = () => {
         setLoading(false); // Stop loading
 
         if (response.ok) {
+          // Optional: store auth flag
+          localStorage.setItem("auth", "true");
           // Save username to localStorage if checkbox is checked
           if (isRemembered) {
             sessionStorage.setItem("rememberedUsername", username);
