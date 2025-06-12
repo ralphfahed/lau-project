@@ -23,7 +23,7 @@ function ProjectsPage({ userName }) {
         <Navbar />
 
         <button onClick={handleBackClick} className="back-button">
-          ← Back to Home
+          ← Home
         </button>
         <h2 className="projects-title">My Projects</h2>
         <table className="projects-table">

@@ -9,7 +9,7 @@
 #welcome {
   display: flex;
   justify-content: space-between;
-  background-color: #3949ab;
+  background-color: #0f2b3e;
   padding: 15px;
   font-weight: bold;
   font-size: 16px;
@@ -21,7 +21,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #3498db;
+  background-color: #ff4c4c;
   color: white;
   font-weight: bold;
   font-size: 20px;

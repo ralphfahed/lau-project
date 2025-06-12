@@ -99,13 +99,6 @@ const LoginRegister = () => {
       return;
     }
 
-    // Proceed with the fetch if both fields are filled
-    //fetch(...): Sends a request to the backend (your Python/Flask server).
-    // http://localhost:5000/login: This is the URL of your login API.
-    //method is a POST request (used to send data).
-    //headers tells the server: “I’m sending JSON data”.
-    //body ta eloun kif bade data tbayen
-
     fetch("http://localhost:5000/login", {
       method: "POST",
       headers: {
