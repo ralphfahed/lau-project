@@ -6,11 +6,12 @@ import {
   FaTimes,
   FaTrash,
 } from "react-icons/fa";
+import Navbar from "../layout/Navbar";
+import Footerbar from "../layout/Footerbar";
 import "./SportPage.css";
 
 function AddElementForm({ onAdd, fixedType }) {
   const [content, setContent] = useState("");
-
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!content.trim()) return;
@@ -139,8 +140,9 @@ const SportPage = () => {
 
   return (
     <div className="page-container">
+      <Navbar />
       {/* Header */}
-      <header className="page-header" style={headerStyle}>
+      <header className="page-header">
         <button
           className="burger"
           onClick={() => setShowNav(!showNav)}
@@ -296,7 +298,6 @@ const SportPage = () => {
           </div>
         </div>
       </header>
-
       {/* Side Nav (toggleable) */}
       {showNav && (
         <nav className="side-nav">
@@ -363,16 +364,12 @@ const SportPage = () => {
           </div>
         </nav>
       )}
-
       {/* Main content */}
       <main className="page-body">
         <p>Here is the main SportPage content...</p>
       </main>
-
       {/* Footer */}
-      <footer className="page-footer">
-        <p>© 2025 SportPage Inc. All rights reserved.</p>
-      </footer>
+      <Footerbar />
     </div>
   );
 };
