@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../layout/Navbar.css"; // Make sure this path is correct
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -90,7 +90,7 @@ const Navbar = () => {
           {userName ? (
             <UserMenu userName={userName} onLogout={handleLogout} />
           ) : (
-            <a href="/login">Login</a>
+            <Link to="/login">Login</Link> // <-- changed here
           )}
         </div>
       </div>

@@ -115,8 +115,8 @@ const LoginRegister = () => {
         setLoading(false); // Stop loading
 
         if (response.ok) {
-          // Optional: store auth flag
-          localStorage.setItem("auth", "true");
+          // // Optional: store auth flag
+          // localStorage.setItem("auth", "true");
           // Save username to localStorage if checkbox is checked
           if (isRemembered) {
             sessionStorage.setItem("rememberedUsername", username);
