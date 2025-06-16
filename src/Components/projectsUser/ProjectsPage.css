@@ -31,7 +31,7 @@
 
 /* Header styling */
 .projects-table th {
-  background-color: #007bff;
+  background-color: #ff4c4c;
   color: white;
 }
 
@@ -61,7 +61,7 @@
   padding: 8px 15px;
   font-size: 16px;
   cursor: pointer;
-  background-color: #007bff;
+  background-color: #ff4c4c;
   color: white;
   border: none;
   border-radius: 4px;
