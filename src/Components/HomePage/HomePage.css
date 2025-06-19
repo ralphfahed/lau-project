@@ -7,10 +7,11 @@
 }
 
 #theme {
+  font-family: cursive;
   font-size: 34px;
   padding: 20px;
   font-weight: 400;
-  color: #333333;
+  color: #ff4c4c;
 }
 
 hr {
@@ -53,6 +54,8 @@ hr {
 .cardBox {
   display: flex;
   align-items: center;
+  justify-content: center;
+  margin: auto;
 }
 /* When screen width is less than 700px */
 @media (max-width: 750px) {

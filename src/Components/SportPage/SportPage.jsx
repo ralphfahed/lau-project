@@ -1,377 +1,291 @@
 import React, { useState } from "react";
-import {
-  FaBasketballBall,
-  FaEdit,
-  FaCheck,
-  FaTimes,
-  FaTrash,
-} from "react-icons/fa";
+import { Eye, Settings, Palette, Type, Image, Download } from "lucide-react";
+import "./SportPage.css";
 import Navbar from "../layout/Navbar";
 import Footerbar from "../layout/Footerbar";
-import "./SportPage.css";
 
-function AddElementForm({ onAdd, fixedType }) {
-  const [content, setContent] = useState("");
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (!content.trim()) return;
-    onAdd({ type: fixedType || "text", content });
-    setContent("");
-  };
-
-  return (
-    <form onSubmit={handleSubmit} className="add-form">
-      <input
-        type="text"
-        placeholder={`Enter ${fixedType || "text/button"} content`}
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-      />
-      <button type="submit">Add</button>
-    </form>
-  );
-}
-
-const SportPage = () => {
-  const [headerElements, setHeaderElements] = useState([]);
+function Sport() {
   const [headerStyle, setHeaderStyle] = useState({
-    backgroundColor: "#0f2b3e",
-    padding: "1rem",
-    color: "white",
+    backgroundColor: "#1e40af",
+    color: "#ffffff",
+    padding: "1rem 2rem",
   });
-  const [showNav, setShowNav] = useState(false);
-  const [editingId, setEditingId] = useState(null);
-  const [editContent, setEditContent] = useState("");
-  const [userIcon, setUserIcon] = useState(null);
 
-  // States for new element default styles
-  const [textColor, setTextColor] = useState("#ffffff");
-  const [fontSize, setFontSize] = useState("16");
-  const [fontFamily, setFontFamily] = useState("Arial, sans-serif");
+  const [headerElements, setHeaderElements] = useState([
+    {
+      id: "1",
+      content: "Home",
+      color: "#ffffff",
+      fontSize: 16,
+      fontFamily: "Inter",
+    },
+    {
+      id: "2",
+      content: "News",
+      color: "#ffffff",
+      fontSize: 16,
+      fontFamily: "Inter",
+    },
+    {
+      id: "3",
+      content: "About us",
+      color: "#ffffff",
+      fontSize: 16,
+      fontFamily: "Inter",
+    },
+    {
+      id: "4",
+      content: "Contact us",
+      color: "#ffffff",
+      fontSize: 16,
+      fontFamily: "Inter",
+    },
+  ]);
 
-  // States for editing existing element styles
-  const [editColor, setEditColor] = useState("");
-  const [editFontSize, setEditFontSize] = useState("");
-  const [editFontFamily, setEditFontFamily] = useState("");
+  const [userIcon, setUserIcon] = useState(
+    "https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=400"
+  );
+  const [activeTab, setActiveTab] = useState("design");
 
-  const addElement = (element) => {
-    setHeaderElements((prev) => [
-      ...prev,
-      {
-        ...element,
-        id: Date.now(),
-        color: textColor,
-        fontSize,
-        fontFamily,
-      },
-    ]);
+  const addHeaderElement = () => {
+    const newElement = {
+      id: Date.now().toString(),
+      content: "New Item",
+      color: "#ffffff",
+      fontSize: 16,
+      fontFamily: "Inter",
+    };
+    setHeaderElements([...headerElements, newElement]);
   };
 
-  const changeBackgroundColor = (e) => {
-    setHeaderStyle((prev) => ({ ...prev, backgroundColor: e.target.value }));
-  };
-
-  const changeTextColor = (e) => {
-    setTextColor(e.target.value);
-  };
-
-  const changeFontSize = (e) => {
-    setFontSize(e.target.value);
-  };
-
-  const changeFontFamily = (e) => {
-    setFontFamily(e.target.value);
-  };
-
-  // When editing starts, load current styles into editing states
-  const startEditing = (
-    id,
-    currentContent,
-    currentColor,
-    currentFontSize,
-    currentFontFamily
-  ) => {
-    setEditingId(id);
-    setEditContent(currentContent);
-    setEditColor(currentColor || "#000000");
-    setEditFontSize(currentFontSize || "16");
-    setEditFontFamily(currentFontFamily || "Arial, sans-serif");
-  };
-
-  const cancelEditing = () => {
-    setEditingId(null);
-    setEditContent("");
-    setEditColor("");
-    setEditFontSize("");
-    setEditFontFamily("");
-  };
-
-  const saveEditing = (id) => {
-    setHeaderElements((prev) =>
-      prev.map((el) =>
-        el.id === id
-          ? {
-              ...el,
-              content: editContent,
-              color: editColor,
-              fontSize: editFontSize,
-              fontFamily: editFontFamily,
-            }
-          : el
+  const updateElement = (id, field, value) => {
+    setHeaderElements(
+      headerElements.map((el) =>
+        el.id === id ? { ...el, [field]: value } : el
       )
     );
-    cancelEditing();
   };
 
-  const deleteElement = (id) => {
-    setHeaderElements((prev) => prev.filter((el) => el.id !== id));
-  };
-
-  const handleIconUpload = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setUserIcon(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
+  const removeElement = (id) => {
+    setHeaderElements(headerElements.filter((el) => el.id !== id));
   };
 
   return (
-    <div className="page-container">
+    <div className="container">
       <Navbar />
-      {/* Header */}
-      <header className="page-header">
-        <button
-          className="burger"
-          onClick={() => setShowNav(!showNav)}
-          title="Toggle menu"
-        >
-          ☰
-        </button>
-        <div className="icon-text">
-          {userIcon && (
-            <div className="icon-wrapper">
-              <img
-                src={userIcon}
-                alt="User Icon"
-                className="user-icon"
-                title="User uploaded icon"
-              />
-              <button
-                className="delete-icon-btn"
-                onClick={() => setUserIcon(null)}
-                title="Remove Icon"
-              >
-                <FaTimes />
-              </button>
-            </div>
-          )}
+      <div className="sport-body">
+        {activeTab === "design" && (
+          <div className="tab-buttons">
+            <button className="active" onClick={() => setActiveTab("design")}>
+              Design
+            </button>
+            <button onClick={() => setActiveTab("preview")}>Preview</button>
+          </div>
+        )}
 
-          <div className="nav-elements">
-            {headerElements.map((el) => {
-              const isEditing = editingId === el.id;
-              if (isEditing) {
-                return (
-                  <span key={el.id} className="nav-item editing">
+        {activeTab === "design" ? (
+          <div className="design-layout">
+            {/* Design Panel */}
+            <div className="design-panel">
+              <section className="section">
+                <h3>
+                  <Palette /> Header Style
+                </h3>
+                <label>Background Color</label>
+                <input
+                  type="color"
+                  value={headerStyle.backgroundColor}
+                  onChange={(e) =>
+                    setHeaderStyle({
+                      ...headerStyle,
+                      backgroundColor: e.target.value,
+                    })
+                  }
+                />
+                <input
+                  type="text"
+                  value={headerStyle.backgroundColor}
+                  onChange={(e) =>
+                    setHeaderStyle({
+                      ...headerStyle,
+                      backgroundColor: e.target.value,
+                    })
+                  }
+                />
+
+                <label>Padding</label>
+                <input
+                  type="text"
+                  value={headerStyle.padding}
+                  onChange={(e) =>
+                    setHeaderStyle({ ...headerStyle, padding: e.target.value })
+                  }
+                />
+              </section>
+
+              <section className="section">
+                <h3>
+                  <Image /> User Icon
+                </h3>
+
+                <label>Upload Icon Image</label>
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onloadend = () => {
+                        setUserIcon(reader.result);
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                />
+                {userIcon && (
+                  <img
+                    src={userIcon}
+                    alt="Preview"
+                    className="user-preview"
+                    onError={(e) => (e.target.style.display = "none")}
+                  />
+                )}
+              </section>
+
+              <section className="section">
+                <h3>
+                  <Type /> Navigation Items
+                </h3>
+                <button onClick={addHeaderElement}>Add Item</button>
+                {headerElements.map((el) => (
+                  <div key={el.id} className="nav-edit-item">
                     <input
                       type="text"
-                      value={editContent}
-                      onChange={(e) => setEditContent(e.target.value)}
-                      autoFocus
+                      value={el.content}
+                      onChange={(e) =>
+                        updateElement(el.id, "content", e.target.value)
+                      }
                     />
-                    <label>
-                      Text Color:
-                      <input
-                        type="color"
-                        value={editColor}
-                        onChange={(e) => setEditColor(e.target.value)}
-                      />
-                    </label>
-                    <label>
-                      Font Size:
-                      <input
-                        type="number"
-                        min="8"
-                        max="72"
-                        value={editFontSize}
-                        onChange={(e) => setEditFontSize(e.target.value)}
-                        style={{ width: "60px" }}
-                      />
-                    </label>
-                    <label>
-                      Font Family:
-                      <select
-                        value={editFontFamily}
-                        onChange={(e) => setEditFontFamily(e.target.value)}
-                      >
-                        <option value="Arial, sans-serif">Arial</option>
-                        <option value="'Courier New', Courier, monospace">
-                          Courier New
-                        </option>
-                        <option value="'Times New Roman', Times, serif">
-                          Times New Roman
-                        </option>
-                        <option value="'Georgia', serif">Georgia</option>
-                        <option value="'Verdana', sans-serif">Verdana</option>
-                        <option value="'Trebuchet MS', sans-serif">
-                          Trebuchet MS
-                        </option>
-                      </select>
-                    </label>
+                    <button onClick={() => removeElement(el.id)}>Remove</button>
+                    <label>Color</label>
+                    <input
+                      type="color"
+                      value={el.color}
+                      onChange={(e) =>
+                        updateElement(el.id, "color", e.target.value)
+                      }
+                    />
+                    <label>Font Size</label>
+                    <input
+                      type="number"
+                      value={el.fontSize}
+                      onChange={(e) =>
+                        updateElement(
+                          el.id,
+                          "fontSize",
+                          parseInt(e.target.value)
+                        )
+                      }
+                    />
+                    <label>Font Family</label>
+                    <select
+                      value={el.fontFamily}
+                      onChange={(e) =>
+                        updateElement(el.id, "fontFamily", e.target.value)
+                      }
+                    >
+                      <option value="Inter">Inter</option>
+                      <option value="Arial">Arial</option>
+                      <option value="Helvetica">Helvetica</option>
+                      <option value="Georgia">Georgia</option>
+                      <option value="Times New Roman">Times New Roman</option>
+                    </select>
+                  </div>
+                ))}
+              </section>
+            </div>
 
-                    <button onClick={() => saveEditing(el.id)} title="Save">
-                      <FaCheck />
-                    </button>
-                    <button onClick={cancelEditing} title="Cancel">
-                      <FaTimes />
-                    </button>
-                  </span>
-                );
-              }
-
-              switch (el.type) {
-                case "text":
-                  return (
+            {/* Live Header Preview */}
+            <div
+              className="header-preview"
+              style={{ flex: 1, marginLeft: "1rem" }}
+            >
+              <div className="live-prev">
+                <h5>Live Preview</h5>
+              </div>
+              <header className="main-header" style={headerStyle}>
+                {userIcon && (
+                  <img
+                    src={userIcon}
+                    alt="User"
+                    className="user-icon"
+                    onError={(e) => (e.target.style.display = "none")}
+                  />
+                )}
+                <nav className="nav">
+                  {headerElements.map((el) => (
                     <span
                       key={el.id}
-                      className="nav-item"
                       style={{
-                        color: el.color || "inherit",
-                        fontSize: el.fontSize ? `${el.fontSize}px` : "inherit",
-                        fontFamily: el.fontFamily || "inherit",
+                        color: el.color,
+                        fontSize: `${el.fontSize}px`,
+                        fontFamily: el.fontFamily,
                       }}
+                      className="nav-item"
                     >
                       {el.content}
-                      <button
-                        className="edit-btn"
-                        onClick={() =>
-                          startEditing(
-                            el.id,
-                            el.content,
-                            el.color,
-                            el.fontSize,
-                            el.fontFamily
-                          )
-                        }
-                        title="Edit"
-                      >
-                        <FaEdit />
-                      </button>
-                      <button
-                        className="delete-btn"
-                        onClick={() => deleteElement(el.id)}
-                        title="Delete"
-                      >
-                        <FaTrash style={{ color: "red" }} />
-                      </button>
                     </span>
-                  );
-
-                case "button":
-                  return (
-                    <span key={el.id} className="nav-item">
-                      {el.content}
-                      <div className="nav-actions">
-                        <button
-                          className="edit-btn"
-                          onClick={() => startEditing(el.id, el.content)}
-                          title="Edit"
-                        >
-                          <FaEdit />
-                        </button>
-                        <button
-                          className="delete-btn"
-                          onClick={() => deleteElement(el.id)}
-                          title="Delete"
-                        >
-                          ×
-                        </button>
-                      </div>
-                    </span>
-                  );
-                default:
-                  return null;
-              }
-            })}
+                  ))}
+                </nav>
+              </header>
+              {/* <h2>sportfffffffffffffffffffffffffffffffffffffffff</h2> */}
+            </div>
           </div>
-        </div>
-      </header>
-      {/* Side Nav (toggleable) */}
-      {showNav && (
-        <nav className="side-nav">
-          <h4>Customize Header</h4>
-
-          <label>
-            Background Color:
-            <input
-              type="color"
-              value={headerStyle.backgroundColor}
-              onChange={changeBackgroundColor}
-            />
-          </label>
-
-          <h4>Add Text</h4>
-          <AddElementForm fixedType="text" onAdd={addElement} />
-
-          {/* New controls for default text styles */}
-          <label>
-            Text Color:
-            <input type="color" value={textColor} onChange={changeTextColor} />
-          </label>
-
-          <label>
-            Font Size (px):
-            <input
-              type="number"
-              min="8"
-              max="72"
-              value={fontSize}
-              onChange={changeFontSize}
-              style={{ width: "60px" }}
-            />
-          </label>
-
-          <label>
-            Font Family:
-            <select value={fontFamily} onChange={changeFontFamily}>
-              <option value="Arial, sans-serif">Arial</option>
-              <option value="'Courier New', Courier, monospace">
-                Courier New
-              </option>
-              <option value="'Times New Roman', Times, serif">
-                Times New Roman
-              </option>
-              <option value="'Georgia', serif">Georgia</option>
-              <option value="'Verdana', sans-serif">Verdana</option>
-              <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
-            </select>
-          </label>
-
-          <h4>Add Icon</h4>
-          <div className="upload-box">
-            <label htmlFor="icon-upload" className="icon-upload-label">
-              &#8682; Upload
-            </label>
-            <input
-              type="file"
-              id="icon-upload"
-              accept="image/*"
-              onChange={handleIconUpload}
-              style={{ display: "none" }}
-            />
+        ) : (
+          <div className="preview-panel">
+            <div className="full-back">
+              <h3>Full Preview</h3>
+              <button
+                className="back-button"
+                onClick={() => setActiveTab("design")}
+              >
+                Back to Design
+              </button>
+            </div>
+            <div className="preview-header" style={headerStyle}>
+              {userIcon && (
+                <img
+                  src={userIcon}
+                  alt="User Icon"
+                  className="user-icon"
+                  onError={(e) => (e.target.style.display = "none")}
+                />
+              )}
+              <nav className="nav">
+                {headerElements.map((el) => (
+                  <span
+                    key={el.id}
+                    style={{
+                      color: el.color,
+                      fontSize: `${el.fontSize}px`,
+                      fontFamily: el.fontFamily,
+                    }}
+                    className="nav-item"
+                  >
+                    {el.content}
+                  </span>
+                ))}
+              </nav>
+            </div>
           </div>
-        </nav>
-      )}
-      {/* Main content */}
-      <main className="page-body">
-        <p>Here is the main SportPage content...</p>
-      </main>
-      {/* Footer */}
+        )}
+      </div>
+
       <Footerbar />
     </div>
   );
-};
+}
 
-export default SportPage;
+export default Sport;

@@ -1,296 +1,204 @@
-.page-container {
+/* SportPage.css */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  font-family: sans-serif;
+  background: linear-gradient(to bottom right, #f8fafc, #f1f5f9);
+  min-height: 100vh; /* or height: 100vh; */
+  width: 100vw;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  width: 100vw;
 }
 
-/* Header (navbar) */
-.page-header {
+.main-header {
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* align burger + icon + nav-elements on left */
-  gap: 0.5rem; /* add some spacing between burger, icon, and upload */
-  flex-wrap: wrap;
-  background-color: #0f2b3e;
-  color: white;
-  padding: 1rem;
-  position: relative;
+  gap: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-/* Burger button */
-.burger {
-  font-size: 1.5rem;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-  display: inline-block !important;
-  margin-right: 0.5rem;
-}
-
-/* Wrap user icon and upload box side by side */
-.user-upload-wrapper {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem; /* space between icon and upload button */
-}
-
-/* Uploaded image shown as a circle */
 .user-icon {
   width: 40px;
   height: 40px;
-  border-radius: 50%; /* circle */
+  border-radius: 50%;
   object-fit: cover;
-  vertical-align: middle;
-  transition: border-color 0.3s ease;
 }
 
-.user-icon:hover {
-  border-color: #0056b3;
-}
-
-/* Upload box styled like the add-form input */
-.upload-box {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 140px; /* adjust width */
-  height: 38px; /* similar height to input */
-  border: 1px solid #ccc; /* solid border like input */
-  border-radius: 3px; /* same radius */
-  background-color: white; /* same background as input */
-  cursor: pointer;
-  user-select: none;
-  font-weight: 600;
-  color: #0f2b3e;
-  font-size: 1rem; /* same font size */
-  padding: 0 0.6rem;
-  box-sizing: border-box;
-  transition: background-color 0.3s ease, border-color 0.3s ease,
-    color 0.3s ease;
-}
-
-.upload-box:hover {
-  background-color: #e6f0ff; /* subtle hover background */
-  border-color: #007bff; /* blue border on hover */
-  color: #0056b3;
-}
-
-/* Make the label inside upload box fill it and be clickable */
-.icon-upload-label {
-  all: unset;
-  cursor: pointer;
-  width: 100%;
-  height: 100%;
+.nav {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+  gap: 1.5rem;
 }
 
-/* Hide actual file input */
-#icon-upload {
-  display: none;
-}
-
-/* Nav item container */
 .nav-item {
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.nav-item:hover {
+  opacity: 0.8;
+}
+
+.tab-buttons {
+  max-width: 30%;
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  height: 50px;
+  border-radius: 5px;
+}
+
+.tab-buttons button {
+  flex: 1;
+  padding: 0.75rem;
+  border-radius: 0.375rem;
+  border: none;
+  background: #e2e8f0;
+  color: #334155;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.tab-buttons button.active {
+  background: white;
+  color: #2563eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.section {
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+}
+
+.section h3 {
   display: flex;
   align-items: center;
-  gap: 3px;
-}
-.nav-item-container {
-  width: 180px; /* fixed width for all items */
-  display: flex;
-  flex-direction: column;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 0.3rem 0.6rem;
-  border-radius: 5px;
-  position: relative;
-  margin-bottom: 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  color: #0f172a;
 }
 
-/* Hide icon if text is present */
-.nav-item-container.has-text .nav-icon {
-  display: none; /* hide icon */
-}
-
-/* Content area - align text to opposite side (right) if icon is hidden */
-.nav-item-container.has-text .nav-content {
-  text-align: right; /* or flex-end if using flex */
-  margin-left: auto; /* push text to right */
-}
-
-/* Style edit button blue */
-.nav-actions .edit-btn {
-  background: transparent;
-  border: 1.5px solid #007bff;
-  color: #007bff;
-  cursor: pointer;
-  padding: 2px 8px;
-  font-size: 0.9rem;
-  border-radius: 3px;
-  transition: background-color 0.2s ease;
-}
-
-.nav-actions .edit-btn:hover {
-  background-color: #cce5ff;
-}
-
-/* Style delete button red */
-.nav-actions .delete-btn {
-  background: transparent;
-  border: 1.5px solid #dc3545;
-  color: #dc3545;
-  cursor: pointer;
-  padding: 2px 8px;
-  font-size: 0.9rem;
-  border-radius: 3px;
-  transition: background-color 0.2s ease;
-}
-
-.nav-actions .delete-btn:hover {
-  background-color: #f5c6cb;
-}
-
-/* Edit input box */
-.edit-section input {
+.section input,
+.section select {
   width: 100%;
-  padding: 2px 5px;
-  font-size: 1rem;
-  border-radius: 3px;
-  border: 1px solid #ccc;
-  margin-bottom: 0.2rem;
+  padding: 3px;
+  margin-bottom: 0.75rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
 }
 
-.edit-section button {
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  margin-right: 0.3rem;
-  color: white;
-  font-size: 1.1rem;
+.user-preview {
+  display: block;
+  width: 48px;
+  height: 48px;
+  border-radius: 9999px;
+  margin-top: 1rem;
+  object-fit: cover;
 }
 
-.edit-section button:last-child {
-  margin-right: 0;
-}
-
-/* Side navigation */
-.side-nav {
-  position: fixed;
-  top: 60px;
-  left: 0;
-  bottom: 0;
-  background-color: #f8f8f8;
+.nav-edit-item {
+  border: 1px solid #e2e8f0;
   padding: 1rem;
-  border-right: 1px solid #ccc;
-  z-index: 1000;
+  border-radius: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.preview-header {
   display: flex;
-  flex-direction: column;
-  gap: 1rem;
+  align-items: center;
+  gap: 1.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 1rem;
+  background: white;
 }
 
-.side-nav h4 {
-  margin: 0.5rem 0 0.2rem;
-  color: #0f2b3e;
-}
-
-.side-nav input[type="color"] {
-  margin-left: 0.5rem;
-}
-
-/* Add form styling */
-.add-form {
+.export-button {
+  margin-top: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: #16a34a;
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
   display: flex;
+  align-items: center;
   gap: 0.5rem;
 }
 
-.add-form input {
+.export-button:hover {
+  background-color: #15803d;
+}
+.layout-container {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.editor-section {
   flex: 1;
-  padding: 0.4rem;
-  border-radius: 3px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
+  min-width: 300px;
+  max-width: 450px;
 }
 
-.add-form button {
-  padding: 0.4rem 0.8rem;
-  background-color: #0f2b3e;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
+.preview-section {
+  flex: 2;
+  min-width: 500px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+.design-layout {
+  display: flex;
+  gap: 1rem;
 }
 
-.add-form button:hover {
-  background-color: #09304a;
-}
-
-/* Body and footer */
-.page-body {
-  flex: 1;
+/* design panel gets a fixed width */
+.design-panel {
+  width: 350px; /* or any width you want */
+  background: white;
   padding: 1rem;
-  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;
+  max-height: 58vh; /* optional for scroll */
+}
+
+/* header preview takes remaining space */
+.header-preview {
+  background: white;
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+.sport-body {
+  padding: 1.5rem;
+  flex: 1;
   overflow-y: auto;
 }
 
-.page-footer {
-  background-color: #0f2b3e;
-  color: white;
-  text-align: center;
-  padding: 1rem;
+.live-prev {
+  margin-top: 6px;
+  margin-bottom: 12px;
 }
 
-.button-box {
+.full-back {
   display: flex;
-}
-
-.nav-actions {
-  display: flex;
-  flex-direction: column; /* stack buttons vertically */
-  gap: 0.25rem; /* space between buttons */
-  margin-top: 0.25rem; /* space between text and buttons */
-  align-items: flex-start; /* align buttons left */
-}
-
-.nav-item button {
-  width: auto; /* reset width if set */
-  padding: 0.2rem 0.4rem;
-}
-/* Nav elements on the right, aligned to the right */
-.nav-elements {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  justify-content: flex-end; /* push nav elements to right */
-  flex-grow: 1; /* take remaining space */
-  flex-wrap: wrap;
-}
-
-.icon-text {
-  display: flex;
-  width: 96%;
-  align-items: center;
   justify-content: space-between;
-}
-.icon-wrapper {
-  position: relative;
-  display: inline-block;
-}
 
-.delete-icon-btn {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  background: red;
-  color: white;
-  border: none;
-  border-radius: 50%;
-  cursor: pointer;
-  font-size: 0.8rem;
-  padding: 1px;
+  align-items: center;
 }
