@@ -7,11 +7,6 @@
 }
 body {
   font-family: "Poppins", sans-serif;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  background-color: #e2e8f0;
   min-height: 100vh;
-  background: url("./Components/Assets/background3.jpg") no-repeat;
-  background-size: cover;
-  background-position: center;
 }

@@ -208,40 +208,6 @@ function Sport() {
             </div>
 
             {/* Live Header Preview */}
-            <div
-              className="header-preview"
-              style={{ flex: 1, marginLeft: "1rem" }}
-            >
-              <div className="live-prev">
-                <h5>Live Preview</h5>
-              </div>
-              <header className="main-header" style={headerStyle}>
-                {userIcon && (
-                  <img
-                    src={userIcon}
-                    alt="User"
-                    className="user-icon"
-                    onError={(e) => (e.target.style.display = "none")}
-                  />
-                )}
-                <nav className="nav">
-                  {headerElements.map((el) => (
-                    <span
-                      key={el.id}
-                      style={{
-                        color: el.color,
-                        fontSize: `${el.fontSize}px`,
-                        fontFamily: el.fontFamily,
-                      }}
-                      className="nav-item"
-                    >
-                      {el.content}
-                    </span>
-                  ))}
-                </nav>
-              </header>
-              {/* <h2>sportfffffffffffffffffffffffffffffffffffffffff</h2> */}
-            </div>
           </div>
         ) : (
           <div className="preview-panel">
