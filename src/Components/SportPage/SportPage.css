@@ -67,6 +67,7 @@ body {
 }
 
 .section {
+  margin-top: 1.5rem;
   background: white;
   border: 1px solid #e2e8f0;
   border-radius: 0.75rem;
@@ -99,6 +100,7 @@ body {
   height: 48px;
   border-radius: 9999px;
   margin-top: 1rem;
+  margin-bottom: 1rem;
   object-fit: cover;
 }
 
@@ -192,5 +194,42 @@ body {
 .full-back {
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+.preview-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem 2rem;
+  margin-top: 2rem;
+}
+
+.preview-footer .nav-item {
+  cursor: default;
+  user-select: none;
+}
+.toggle-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #444;
+}
+.body-cards-preview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 cards per row */
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.preview-card {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 0.5rem;
+  background-color: #fff;
+  color: #000;
+  display: flex;
+  flex-direction: column;
   align-items: center;
 }
