@@ -5,6 +5,9 @@ import LoginRegister from "./Components/LoginRegister/LoginRegister";
 import SportPage from "./Components/SportPage/SportPage";
 import ProjectsPage from "./Components/projectsUser/ProjectsPage";
 import ProtectedRoute from "./Components/ProtectedRoute"; // ⬅️ Add this
+import Privacy from "./Components/FooterNav/Privacy";
+import Terms from "./Components/FooterNav/Terms";
+import Contact from "./Components/FooterNav/Contact";
 
 const App = () => {
   return (
@@ -38,6 +41,9 @@ const App = () => {
             </ProtectedRoute>
           }
         />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/Terms" element={<Terms />} />
+        <Route path="/Contact" element={<Contact />} />
       </Routes>
     </Router>
   );

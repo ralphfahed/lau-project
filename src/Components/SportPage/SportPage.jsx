@@ -184,69 +184,76 @@ function Sport() {
                 </h3>
                 {showHeaderSettings && (
                   <>
-                    <label>Background Color</label>
-                    <input
-                      type="color"
-                      value={headerStyle.backgroundColor}
-                      onChange={(e) =>
-                        setHeaderStyle({
-                          ...headerStyle,
-                          backgroundColor: e.target.value,
-                        })
-                      }
-                    />
-                    <input
-                      type="text"
-                      value={headerStyle.backgroundColor}
-                      onChange={(e) =>
-                        setHeaderStyle({
-                          ...headerStyle,
-                          backgroundColor: e.target.value,
-                        })
-                      }
-                    />
-                    <label>Padding</label>
-                    <input
-                      type="text"
-                      value={headerStyle.padding}
-                      onChange={(e) =>
-                        setHeaderStyle({
-                          ...headerStyle,
-                          padding: e.target.value,
-                        })
-                      }
-                    />
+                    <div className="header-bg">
+                      <label>Background </label>
+                      <input
+                        type="color"
+                        value={headerStyle.backgroundColor}
+                        onChange={(e) =>
+                          setHeaderStyle({
+                            ...headerStyle,
+                            backgroundColor: e.target.value,
+                          })
+                        }
+                      />
+                      <input
+                        type="text"
+                        value={headerStyle.backgroundColor}
+                        onChange={(e) =>
+                          setHeaderStyle({
+                            ...headerStyle,
+                            backgroundColor: e.target.value,
+                          })
+                        }
+                      />
+                      <label>Padding</label>
+                      <input
+                        type="text"
+                        value={headerStyle.padding}
+                        onChange={(e) =>
+                          setHeaderStyle({
+                            ...headerStyle,
+                            padding: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
 
                     {/* User Icon */}
-                    <h4>
-                      <Image /> User Icon
-                    </h4>
-                    <label>Upload Icon Image</label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files[0];
-                        if (file) {
-                          const reader = new FileReader();
-                          reader.onloadend = () => setUserIcon(reader.result);
-                          reader.readAsDataURL(file);
-                        }
-                      }}
-                    />
-                    {userIcon && (
-                      <img
-                        src={userIcon}
-                        alt="Preview"
-                        className="user-preview"
-                        onError={(e) => (e.target.style.display = "none")}
+                    <div className="icon">
+                      <h4>
+                        <Image />
+                        Upload Icon Image
+                      </h4>
+                    </div>
+                    <div className="choose-image">
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onloadend = () => setUserIcon(reader.result);
+                            reader.readAsDataURL(file);
+                          }
+                        }}
                       />
-                    )}
-
+                      {userIcon && (
+                        <img
+                          src={userIcon}
+                          alt="Preview"
+                          className="user-preview"
+                          onError={(e) => (e.target.style.display = "none")}
+                        />
+                      )}
+                    </div>
                     {/* Navigation Items */}
-                    <h4>
-                      <Type /> Navigation Items
-                    </h4>
+                    <div className="icon">
+                      <h4>
+                        <Type /> Navigation Items
+                      </h4>
+                    </div>
                     <button
                       onClick={addHeaderElement}
                       style={{
@@ -269,55 +276,57 @@ function Sport() {
                             background: "transparent",
                             cursor: "pointer",
                             marginLeft: "auto", // This pushes the button to the far right
-                            padding: "10px",
+                            padding: ".5rem",
                           }}
                           onClick={() => removeElement(el.id)}
                         >
                           X
                         </button>
-                        <input
-                          type="text"
-                          value={el.content}
-                          onChange={(e) =>
-                            updateElement(el.id, "content", e.target.value)
-                          }
-                        />
+                        <div className="nav-content">
+                          <input
+                            type="text"
+                            value={el.content}
+                            onChange={(e) =>
+                              updateElement(el.id, "content", e.target.value)
+                            }
+                          />
 
-                        <label>Color</label>
-                        <input
-                          type="color"
-                          value={el.color}
-                          onChange={(e) =>
-                            updateElement(el.id, "color", e.target.value)
-                          }
-                        />
-                        <label>Font Size</label>
-                        <input
-                          type="number"
-                          value={el.fontSize}
-                          onChange={(e) =>
-                            updateElement(
-                              el.id,
-                              "fontSize",
-                              parseInt(e.target.value)
-                            )
-                          }
-                        />
-                        <label>Font Family</label>
-                        <select
-                          value={el.fontFamily}
-                          onChange={(e) =>
-                            updateElement(el.id, "fontFamily", e.target.value)
-                          }
-                        >
-                          <option value="Inter">Inter</option>
-                          <option value="Arial">Arial</option>
-                          <option value="Helvetica">Helvetica</option>
-                          <option value="Georgia">Georgia</option>
-                          <option value="Times New Roman">
-                            Times New Roman
-                          </option>
-                        </select>
+                          <label>Color</label>
+                          <input
+                            type="color"
+                            value={el.color}
+                            onChange={(e) =>
+                              updateElement(el.id, "color", e.target.value)
+                            }
+                          />
+                          <label>Font Size</label>
+                          <input
+                            type="number"
+                            value={el.fontSize}
+                            onChange={(e) =>
+                              updateElement(
+                                el.id,
+                                "fontSize",
+                                parseInt(e.target.value)
+                              )
+                            }
+                          />
+                          <label>Font Family</label>
+                          <select
+                            value={el.fontFamily}
+                            onChange={(e) =>
+                              updateElement(el.id, "fontFamily", e.target.value)
+                            }
+                          >
+                            <option value="Inter">Inter</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Helvetica">Helvetica</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Times New Roman">
+                              Times New Roman
+                            </option>
+                          </select>
+                        </div>
                       </div>
                     ))}
                   </>
@@ -344,6 +353,7 @@ function Sport() {
                         marginBottom: "0.5rem",
                         marginLeft: "auto",
                         fontWeight: "bold",
+                        border: "1px solid #e2e8f0;",
                       }}
                     >
                       Add Card
@@ -369,142 +379,149 @@ function Sport() {
                           </button>
 
                           {/* Image Upload */}
-                          <label>Image</label>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => {
-                              const file = e.target.files[0];
-                              if (file) {
-                                const reader = new FileReader();
-                                reader.onloadend = () =>
-                                  updateBodyCard(
-                                    card.id,
-                                    "image",
-                                    reader.result
-                                  );
-                                reader.readAsDataURL(file);
-                              }
-                            }}
-                          />
-                          {card.image && (
-                            <img
-                              src={card.image}
-                              alt="Card"
-                              style={{
-                                width: "100%",
-                                maxHeight: "150px",
-                                objectFit: "contain",
-                                marginBottom: "0.5rem",
+
+                          <h4>Image</h4>
+                          <div className="choose-image">
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                const file = e.target.files[0];
+                                if (file) {
+                                  const reader = new FileReader();
+                                  reader.onloadend = () =>
+                                    updateBodyCard(
+                                      card.id,
+                                      "image",
+                                      reader.result
+                                    );
+                                  reader.readAsDataURL(file);
+                                }
                               }}
                             />
-                          )}
+                            {card.image && (
+                              <img
+                                src={card.image}
+                                alt="Card"
+                                style={{
+                                  width: "100%",
+                                  maxHeight: "150px",
+                                  objectFit: "contain",
+                                  marginBottom: "0.5rem",
+                                }}
+                              />
+                            )}
+                          </div>
 
                           {/* Price */}
-                          <label>Price</label>
-                          <input
-                            type="text"
-                            value={card.price}
-                            onChange={(e) =>
-                              updateBodyCard(card.id, "price", e.target.value)
-                            }
-                          />
-                          <label>Color</label>
-                          <input
-                            type="color"
-                            value={card.priceColor}
-                            onChange={(e) =>
-                              updateBodyCard(
-                                card.id,
-                                "priceColor",
-                                e.target.value
-                              )
-                            }
-                          />
-                          <label>Font Size</label>
-                          <input
-                            type="number"
-                            value={card.priceFontSize}
-                            onChange={(e) =>
-                              updateBodyCard(
-                                card.id,
-                                "priceFontSize",
-                                parseInt(e.target.value)
-                              )
-                            }
-                          />
-                          <label>Font Family</label>
-                          <select
-                            value={card.priceFontFamily}
-                            onChange={(e) =>
-                              updateBodyCard(
-                                card.id,
-                                "priceFontFamily",
-                                e.target.value
-                              )
-                            }
-                          >
-                            <option value="Inter">Inter</option>
-                            <option value="Arial">Arial</option>
-                            <option value="Helvetica">Helvetica</option>
-                            <option value="Georgia">Georgia</option>
-                            <option value="Times New Roman">
-                              Times New Roman
-                            </option>
-                          </select>
+                          <div className="body-style">
+                            <label>Price</label>
+                            <input
+                              type="text"
+                              value={card.price}
+                              onChange={(e) =>
+                                updateBodyCard(card.id, "price", e.target.value)
+                              }
+                            />
+                            <label>Color</label>
+                            <input
+                              type="color"
+                              value={card.priceColor}
+                              onChange={(e) =>
+                                updateBodyCard(
+                                  card.id,
+                                  "priceColor",
+                                  e.target.value
+                                )
+                              }
+                            />
+                            <label>Font Size</label>
+                            <input
+                              type="number"
+                              value={card.priceFontSize}
+                              onChange={(e) =>
+                                updateBodyCard(
+                                  card.id,
+                                  "priceFontSize",
+                                  parseInt(e.target.value)
+                                )
+                              }
+                            />
+                            <label>Font Family</label>
+                            <select
+                              value={card.priceFontFamily}
+                              onChange={(e) =>
+                                updateBodyCard(
+                                  card.id,
+                                  "priceFontFamily",
+                                  e.target.value
+                                )
+                              }
+                            >
+                              <option value="Inter">Inter</option>
+                              <option value="Arial">Arial</option>
+                              <option value="Helvetica">Helvetica</option>
+                              <option value="Georgia">Georgia</option>
+                              <option value="Times New Roman">
+                                Times New Roman
+                              </option>
+                            </select>
+                          </div>
 
                           {/* Info */}
-                          <label>Info</label>
-                          <input
-                            type="text"
-                            value={card.info}
-                            onChange={(e) =>
-                              updateBodyCard(card.id, "info", e.target.value)
-                            }
-                          />
-                          <label>Color</label>
-                          <input
-                            type="color"
-                            value={card.infoColor}
-                            onChange={(e) =>
-                              updateBodyCard(
-                                card.id,
-                                "infoColor",
-                                e.target.value
-                              )
-                            }
-                          />
-                          <label>Font Size</label>
-                          <input
-                            type="number"
-                            value={card.infoFontSize}
-                            onChange={(e) =>
-                              updateBodyCard(
-                                card.id,
-                                "infoFontSize",
-                                parseInt(e.target.value)
-                              )
-                            }
-                          />
-                          <label>Font Family</label>
-                          <select
-                            value={card.infoFontFamily}
-                            onChange={(e) =>
-                              updateBodyCard(
-                                card.id,
-                                "infoFontFamily",
-                                e.target.value
-                              )
-                            }
-                          >
-                            <option value="Inter">Inter</option>
-                            <option value="Arial">Arial</option>
-                            <option value="Helvetica">Helvetica</option>
-                            <option value="Georgia">Georgia</option>
-                            <option value="Times New Roman">
-                              Times New Roman
-                            </option>
-                          </select>
+                          <div className="body-style">
+                            <label>Info</label>
+                            <input
+                              type="text"
+                              value={card.info}
+                              onChange={(e) =>
+                                updateBodyCard(card.id, "info", e.target.value)
+                              }
+                            />
+                            <label>Color</label>
+                            <input
+                              type="color"
+                              value={card.infoColor}
+                              onChange={(e) =>
+                                updateBodyCard(
+                                  card.id,
+                                  "infoColor",
+                                  e.target.value
+                                )
+                              }
+                            />
+                            <label>Font Size</label>
+                            <input
+                              type="number"
+                              value={card.infoFontSize}
+                              onChange={(e) =>
+                                updateBodyCard(
+                                  card.id,
+                                  "infoFontSize",
+                                  parseInt(e.target.value)
+                                )
+                              }
+                            />
+                            <label>Font Family</label>
+                            <select
+                              value={card.infoFontFamily}
+                              onChange={(e) =>
+                                updateBodyCard(
+                                  card.id,
+                                  "infoFontFamily",
+                                  e.target.value
+                                )
+                              }
+                            >
+                              <option value="Inter">Inter</option>
+                              <option value="Arial">Arial</option>
+                              <option value="Helvetica">Helvetica</option>
+                              <option value="Georgia">Georgia</option>
+                              <option value="Times New Roman">
+                                Times New Roman
+                              </option>
+                            </select>
+                          </div>
                         </div>
                       ))}
                     </div>
@@ -525,43 +542,47 @@ function Sport() {
                 </h3>
                 {showFooterSettings && (
                   <>
-                    <label>Background Color</label>
-                    <input
-                      type="color"
-                      value={footerStyle.backgroundColor}
-                      onChange={(e) =>
-                        setFooterStyle({
-                          ...footerStyle,
-                          backgroundColor: e.target.value,
-                        })
-                      }
-                    />
-                    <input
-                      type="text"
-                      value={footerStyle.backgroundColor}
-                      onChange={(e) =>
-                        setFooterStyle({
-                          ...footerStyle,
-                          backgroundColor: e.target.value,
-                        })
-                      }
-                    />
-                    <label>Padding</label>
-                    <input
-                      type="text"
-                      value={footerStyle.padding}
-                      onChange={(e) =>
-                        setFooterStyle({
-                          ...footerStyle,
-                          padding: e.target.value,
-                        })
-                      }
-                    />
+                    <div className="header-bg">
+                      <label>Background Color</label>
+                      <input
+                        type="color"
+                        value={footerStyle.backgroundColor}
+                        onChange={(e) =>
+                          setFooterStyle({
+                            ...footerStyle,
+                            backgroundColor: e.target.value,
+                          })
+                        }
+                      />
+                      <input
+                        type="text"
+                        value={footerStyle.backgroundColor}
+                        onChange={(e) =>
+                          setFooterStyle({
+                            ...footerStyle,
+                            backgroundColor: e.target.value,
+                          })
+                        }
+                      />
+                      <label>Padding</label>
+                      <input
+                        type="text"
+                        value={footerStyle.padding}
+                        onChange={(e) =>
+                          setFooterStyle({
+                            ...footerStyle,
+                            padding: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
 
                     {/* Footer Items */}
-                    <h4>
-                      <Type /> Footer Items
-                    </h4>
+                    <div className="icon">
+                      <h4>
+                        <Type /> Footer Items
+                      </h4>
+                    </div>
                     <button
                       onClick={() => {
                         const newFooterItem = {
@@ -603,72 +624,74 @@ function Sport() {
                         >
                           X
                         </button>
-                        <input
-                          type="text"
-                          value={el.content}
-                          onChange={(e) =>
-                            setFooterElements(
-                              footerElements.map((item) =>
-                                item.id === el.id
-                                  ? { ...item, content: e.target.value }
-                                  : item
+                        <div className="nav-content">
+                          <input
+                            type="text"
+                            value={el.content}
+                            onChange={(e) =>
+                              setFooterElements(
+                                footerElements.map((item) =>
+                                  item.id === el.id
+                                    ? { ...item, content: e.target.value }
+                                    : item
+                                )
                               )
-                            )
-                          }
-                        />
+                            }
+                          />
 
-                        <label>Color</label>
-                        <input
-                          type="color"
-                          value={el.color}
-                          onChange={(e) =>
-                            setFooterElements(
-                              footerElements.map((item) =>
-                                item.id === el.id
-                                  ? { ...item, color: e.target.value }
-                                  : item
+                          <label>Color</label>
+                          <input
+                            type="color"
+                            value={el.color}
+                            onChange={(e) =>
+                              setFooterElements(
+                                footerElements.map((item) =>
+                                  item.id === el.id
+                                    ? { ...item, color: e.target.value }
+                                    : item
+                                )
                               )
-                            )
-                          }
-                        />
-                        <label>Font Size</label>
-                        <input
-                          type="number"
-                          value={el.fontSize}
-                          onChange={(e) =>
-                            setFooterElements(
-                              footerElements.map((item) =>
-                                item.id === el.id
-                                  ? {
-                                      ...item,
-                                      fontSize: parseInt(e.target.value),
-                                    }
-                                  : item
+                            }
+                          />
+                          <label>Font Size</label>
+                          <input
+                            type="number"
+                            value={el.fontSize}
+                            onChange={(e) =>
+                              setFooterElements(
+                                footerElements.map((item) =>
+                                  item.id === el.id
+                                    ? {
+                                        ...item,
+                                        fontSize: parseInt(e.target.value),
+                                      }
+                                    : item
+                                )
                               )
-                            )
-                          }
-                        />
-                        <label>Font Family</label>
-                        <select
-                          value={el.fontFamily}
-                          onChange={(e) =>
-                            setFooterElements(
-                              footerElements.map((item) =>
-                                item.id === el.id
-                                  ? { ...item, fontFamily: e.target.value }
-                                  : item
+                            }
+                          />
+                          <label>Font Family</label>
+                          <select
+                            value={el.fontFamily}
+                            onChange={(e) =>
+                              setFooterElements(
+                                footerElements.map((item) =>
+                                  item.id === el.id
+                                    ? { ...item, fontFamily: e.target.value }
+                                    : item
+                                )
                               )
-                            )
-                          }
-                        >
-                          <option value="Inter">Inter</option>
-                          <option value="Arial">Arial</option>
-                          <option value="Helvetica">Helvetica</option>
-                          <option value="Georgia">Georgia</option>
-                          <option value="Times New Roman">
-                            Times New Roman
-                          </option>
-                        </select>
+                            }
+                          >
+                            <option value="Inter">Inter</option>
+                            <option value="Arial">Arial</option>
+                            <option value="Helvetica">Helvetica</option>
+                            <option value="Georgia">Georgia</option>
+                            <option value="Times New Roman">
+                              Times New Roman
+                            </option>
+                          </select>
+                        </div>
                       </div>
                     ))}
                   </>

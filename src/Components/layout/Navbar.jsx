@@ -30,7 +30,15 @@ const Navbar = () => {
 
         {isOpen && (
           <div className="user-menu">
-            <div className="underlined-text">{userName}</div>
+            <div
+              className="underlined-text"
+              onClick={() => {
+                navigate("/home");
+              }}
+              style={{ cursor: "pointer" }}
+            >
+              {userName}
+            </div>
 
             <div
               className="clickable-text"
@@ -84,7 +92,6 @@ const Navbar = () => {
             alt="Logo"
           />
         </div>
-        {/* <div id="usermail">Welcome {userName}</div> */}
 
         <div>
           {userName ? (
