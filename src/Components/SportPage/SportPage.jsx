@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { Palette, Type, Image } from "lucide-react";
+import { useNavigate, useLocation } from "react-router-dom"; // make sure at the top
+import { Palette, Type, Image, Radius } from "lucide-react";
 import "./SportPage.css";
 import Navbar from "../layout/Navbar";
 import Footerbar from "../layout/Footerbar";
@@ -261,6 +262,14 @@ function Sport() {
                         marginBottom: "0.5rem",
                         marginLeft: "auto",
                         fontWeight: "bold",
+                        width: "90px",
+                        height: "40px",
+                        border: "none",
+                        backgroundColor: "white",
+                        color: "#2563eb",
+                        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.5)",
+                        borderRadius: "6px",
+                        cursor: "pointer",
                       }}
                     >
                       Add Item
@@ -353,7 +362,14 @@ function Sport() {
                         marginBottom: "0.5rem",
                         marginLeft: "auto",
                         fontWeight: "bold",
-                        border: "1px solid #e2e8f0;",
+                        width: "90px",
+                        height: "40px",
+                        border: "none",
+                        backgroundColor: "white",
+                        color: "#2563eb",
+                        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.5)",
+                        borderRadius: "6px",
+                        cursor: "pointer",
                       }}
                     >
                       Add Card
@@ -399,18 +415,20 @@ function Sport() {
                                 }
                               }}
                             />
-                            {card.image && (
-                              <img
-                                src={card.image}
-                                alt="Card"
-                                style={{
-                                  width: "100%",
-                                  maxHeight: "150px",
-                                  objectFit: "contain",
-                                  marginBottom: "0.5rem",
-                                }}
-                              />
-                            )}
+
+                            <img
+                              src={
+                                card.image ||
+                                "https://st2.depositphotos.com/2586633/46477/v/450/depositphotos_464771766-stock-illustration-no-photo-or-blank-image.jpg"
+                              }
+                              alt="Card"
+                              style={{
+                                width: "30%",
+                                maxHeight: "150px",
+                                objectFit: "contain",
+                                marginBottom: "0.5rem",
+                              }}
+                            />
                           </div>
 
                           {/* Price */}
@@ -599,6 +617,14 @@ function Sport() {
                         marginBottom: "0.5rem",
                         marginLeft: "auto",
                         fontWeight: "bold",
+                        width: "90px",
+                        height: "40px",
+                        border: "none",
+                        backgroundColor: "white",
+                        color: "#2563eb",
+                        boxShadow: "0 1px 3px rgba(0, 0, 0, 0.5)",
+                        borderRadius: "6px",
+                        cursor: "pointer",
                       }}
                     >
                       Add Item
@@ -739,18 +765,21 @@ function Sport() {
               <div className="body-cards-preview">
                 {bodyCards.map((card) => (
                   <div key={card.id} className="preview-card">
-                    {card.image && (
-                      <img
-                        src={card.image}
-                        alt="Card"
-                        style={{
-                          width: "100%",
-                          height: "200px",
-                          objectFit: "contain",
-                          marginBottom: "0.5rem",
-                        }}
-                      />
-                    )}
+                    <img
+                      src={
+                        card.image
+                          ? card.image
+                          : "https://st2.depositphotos.com/2586633/46477/v/450/depositphotos_464771766-stock-illustration-no-photo-or-blank-image.jpg"
+                      }
+                      alt="Card"
+                      style={{
+                        width: "100%",
+                        height: "200px",
+                        objectFit: "contain",
+                        marginBottom: "0.5rem",
+                      }}
+                    />
+
                     <div
                       style={{
                         color: card.priceColor,

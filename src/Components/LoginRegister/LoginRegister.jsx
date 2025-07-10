@@ -11,7 +11,7 @@ const LoginRegister = () => {
   const [userLogError, setUserLogError] = useState("");
   const [passLogError, setPassLogError] = useState("");
   const [isRemembered, setIsRemembered] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const [loading, setLoading] = useState(false);
 

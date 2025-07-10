@@ -15,11 +15,26 @@ function Contact() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you would normally send the data to your back-end or email service
-    alert("Message sent!");
-    setFormData({ name: "", email: "", message: "" });
+
+    try {
+      const response = await fetch("http://localhost:5000/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        alert("Message sent successfully!");
+        setFormData({ name: "", email: "", message: "" });
+      } else {
+        alert("Failed to send message.");
+      }
+    } catch (error) {
+      alert("An error occurred.");
+      console.error(error);
+    }
   };
 
   return (
@@ -43,6 +58,7 @@ function Contact() {
               onChange={handleChange}
             />
           </label>
+
           <label>
             Email:
             <input

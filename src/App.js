@@ -8,6 +8,10 @@ import ProtectedRoute from "./Components/ProtectedRoute"; // ⬅️ Add this
 import Privacy from "./Components/FooterNav/Privacy";
 import Terms from "./Components/FooterNav/Terms";
 import Contact from "./Components/FooterNav/Contact";
+import CreateNewProject from "./Components/projectsUser/CreateNewProject";
+import EditProjectPage from "./Components/projectsUser/EditProjectPage";
+import PageEditorPage from "./Components/projectsUser/PageEditorPage";
+import ProjectPreview from "./Components/projectsUser/ProjectPreview";
 
 const App = () => {
   return (
@@ -34,6 +38,13 @@ const App = () => {
         />
 
         <Route
+          path="/projects/:projectId/page/:pageId/edit"
+          element={<PageEditorPage />}
+        />
+
+        <Route path="/editor/:pageId" element={<PageEditorPage />} />
+
+        <Route
           path="/projects"
           element={
             <ProtectedRoute>
@@ -44,6 +55,13 @@ const App = () => {
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/Terms" element={<Terms />} />
         <Route path="/Contact" element={<Contact />} />
+
+        <Route path="/create-project" element={<CreateNewProject />} />
+        <Route path="/projects/:id/edit" element={<EditProjectPage />} />
+        <Route
+          path="/projects/:projectId/preview"
+          element={<ProjectPreview />}
+        />
       </Routes>
     </Router>
   );

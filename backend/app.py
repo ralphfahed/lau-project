@@ -4,6 +4,8 @@ from sqlalchemy import create_engine, Column, Integer, String
 from sqlalchemy.orm import sessionmaker, declarative_base, scoped_session
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import timedelta
+import smtplib
+from email.mime.text import MIMEText
 
 # Create Flask app instance
 app = Flask(__name__)
@@ -152,6 +154,28 @@ def check_auth():
 def remove_session(exception=None):
     # Remove scoped session to avoid leaks
     Session.remove()
+
+@app.route("/send-email", methods=["POST"])
+def send_email():
+    data = request.json
+    name = data.get("name")
+    email = data.get("email")
+    message = data.get("message")
+
+    # Prepare email
+    msg = MIMEText(f"Name: {name}\nEmail: {email}\nMessage: {message}")
+    msg["Subject"] = "New Contact Form Message"
+    msg["From"] = email
+    msg["To"] = "ralphh.fahed@gmail.com"
+
+    try:
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
+            server.login("ralphh.fahed@gmail.com", "cnfbbepmrvhbgmum")
+            server.send_message(msg)
+        return jsonify({"success": True}), 200
+    except Exception as e:
+        print("Error sending email:", e)
+        return jsonify({"success": False, "error": str(e)}), 500
 
 
 if __name__ == "__main__":
