@@ -33,20 +33,20 @@ const Navbar = () => {
             <div
               className="underlined-text"
               onClick={() => {
-                navigate("/home");
+                navigate("/projects");
               }}
               style={{ cursor: "pointer" }}
             >
               {userName}
             </div>
-
+            {/* 
             <div
               className="clickable-text"
               onClick={handleProjectsClick}
               style={{ cursor: "pointer" }}
             >
               My Projects
-            </div>
+            </div> */}
             <div onClick={onLogout} className="logout-button">
               Logout
             </div>

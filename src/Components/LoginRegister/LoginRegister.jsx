@@ -41,7 +41,7 @@ const LoginRegister = () => {
     }
     const isLoggedIn = localStorage.getItem("auth") === "true";
     if (isLoggedIn) {
-      navigate("/home"); // Prevent access to login when already logged in
+      navigate("/projects"); // Prevent access to login when already logged in
     }
   }, [navigate]);
 
@@ -123,7 +123,7 @@ const LoginRegister = () => {
           } else {
             sessionStorage.removeItem("rememberedUsername");
           }
-          navigate("/home");
+          navigate("/projects");
         } else {
           setUserLogError("Incorrect username or password.");
           setPassLogError("Incorrect username or password.");

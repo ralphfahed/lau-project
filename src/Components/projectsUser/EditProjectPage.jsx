@@ -290,17 +290,26 @@ function EditProjectPage() {
   const confirmDeletion = () => {
     if (confirmDeletePageId === null) return;
 
+    // Remove the page from pages list
     const newPages = pages.filter((page) => page.id !== confirmDeletePageId);
     setPages(newPages);
-    setConfirmDeletePageId(null);
 
+    // Remove the header element linked to that page
     setHeaderElements((prev) =>
       prev.filter((el) => el.pageId !== confirmDeletePageId)
     );
 
+    // Remove the footer element linked to that page
+    setFooterElements((prev) =>
+      prev.filter((el) => el.pageId !== confirmDeletePageId)
+    );
+
+    setConfirmDeletePageId(null);
+
+    // Update projects in localStorage with new pages list
     const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
-    const updatedProjects = storedProjects.map(
-      (p) => (p.id === numericId ? { ...p, pages: newPages } : p) // use numericId here
+    const updatedProjects = storedProjects.map((p) =>
+      p.id === numericId ? { ...p, pages: newPages } : p
     );
     localStorage.setItem("projects", JSON.stringify(updatedProjects));
 
@@ -408,13 +417,50 @@ function EditProjectPage() {
   // Footer element updates
   const updateFooterElement = (id, field, value) => {
     setFooterElements((prev) =>
-      prev.map((el) => (el.id === id ? { ...el, [field]: value } : el))
+      prev.map((el) => {
+        if (el.id === id) {
+          const updatedElement = { ...el, [field]: value };
+
+          // If the content changed, update the corresponding page name as well
+          if (field === "content" && el.pageId) {
+            const pageIndex = pages.findIndex((page) => page.id === el.pageId);
+            if (pageIndex !== -1) {
+              const updatedPages = [...pages];
+              updatedPages[pageIndex] = {
+                ...updatedPages[pageIndex],
+                name: value,
+              };
+              setPages(updatedPages);
+            }
+          }
+
+          return updatedElement;
+        }
+        return el;
+      })
     );
   };
 
   const addFooterElement = () => {
+    const newId = Date.now();
+
+    // Create new page for this footer element
+    const newPage = {
+      id: newId,
+      name: "New Page",
+      path: `/page-${newId}`,
+      headerSettings: {},
+      footerSettings: {},
+      bodySettings: {},
+    };
+
+    // Add page to pages list
+    setPages((prevPages) => [...prevPages, newPage]);
+
+    // Add new footer element linked to this page
     const newFooterItem = {
-      id: Date.now().toString(),
+      id: newId.toString(),
+      pageId: newId, // link footer element to page id
       content: "New Footer Item",
       color: "#ffffff",
       fontSize: 14,
@@ -424,8 +470,19 @@ function EditProjectPage() {
     setFooterElements((prev) => [...prev, newFooterItem]);
   };
 
-  const removeFooterElement = (id) => {
-    setFooterElements((prev) => prev.filter((el) => el.id !== id));
+  const removeFooterElement = (idToRemove) => {
+    // Find footer element to remove
+    const elementToRemove = footerElements.find((el) => el.id === idToRemove);
+
+    // Remove footer element
+    setFooterElements((prev) => prev.filter((el) => el.id !== idToRemove));
+
+    // Remove corresponding page linked by pageId
+    if (elementToRemove && elementToRemove.pageId) {
+      setPages((prevPages) =>
+        prevPages.filter((page) => page.id !== elementToRemove.pageId)
+      );
+    }
   };
 
   // Page name change handler
@@ -435,7 +492,15 @@ function EditProjectPage() {
     setPages(updatedPages);
 
     const page = updatedPages[index];
+    // Update header elements
     setHeaderElements((prev) =>
+      prev.map((el) =>
+        el.pageId === page.id ? { ...el, content: newName } : el
+      )
+    );
+
+    // Update footer elements
+    setFooterElements((prev) =>
       prev.map((el) =>
         el.pageId === page.id ? { ...el, content: newName } : el
       )
@@ -450,10 +515,9 @@ function EditProjectPage() {
       <button onClick={handleBackClick} className="back-button">
         ← back
       </button>
+      <h2>Edit "{project.name}" project</h2>
 
       <div className="edit-project-container">
-        <h2>Edit {project.name} project</h2>
-
         {error && <p className="error">{error}</p>}
 
         <h4>Title :</h4>

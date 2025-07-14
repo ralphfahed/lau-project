@@ -7,21 +7,47 @@ import "./PageEditorPage.css";
 function EditPage() {
   const navigate = useNavigate();
   const { pageId = "defaultPage", projectId } = useParams();
-  const storageKey = `EditPageDesign-${pageId}`;
+  const storageKey = `EditPageDesign-project-${projectId}-page-${pageId}`;
 
   const [showBody, setShowBody] = useState(true);
   const [bodyCards, setBodyCards] = useState([]);
   const [activeTab, setActiveTab] = useState("design");
+  const [pageName, setPageName] = useState("");
 
   useEffect(() => {
+    console.log("projectId:", projectId);
+    console.log("pageId:", pageId);
+
+    // Load saved design data from localStorage
     const saved = localStorage.getItem(storageKey);
     if (saved) {
       const data = JSON.parse(saved);
       if (typeof data.showBody === "boolean") setShowBody(data.showBody);
       if (Array.isArray(data.bodyCards)) setBodyCards(data.bodyCards);
     }
-  }, [storageKey]);
 
+    // Load project and page name from projects data in localStorage
+    const projectData = JSON.parse(localStorage.getItem("projects")) || [];
+    const currentProject = projectData.find(
+      (p) => p.id.toString() === projectId
+    );
+
+    console.log("currentProject:", currentProject);
+
+    if (currentProject) {
+      // Important: convert page IDs to string to match with pageId param
+      const currentPage = currentProject.pages.find(
+        (pg) => String(pg.id) === String(pageId)
+      );
+      if (currentPage) {
+        setPageName(currentPage.name);
+      } else {
+        setPageName(`Page ${pageId}`); // fallback if page not found
+      }
+    }
+  }, [storageKey, projectId, pageId]);
+
+  // Add a new card block to the body
   const addBodyCard = () => {
     const newCard = {
       id: Date.now().toString(),
@@ -36,9 +62,10 @@ function EditPage() {
       infoFontSize: 14,
       infoFontFamily: "Inter",
     };
-    setBodyCards([...bodyCards, newCard]);
+    setBodyCards((prev) => [...prev, newCard]);
   };
 
+  // Add a new text block to the body
   const addBodyText = () => {
     const newText = {
       id: Date.now().toString(),
@@ -48,27 +75,31 @@ function EditPage() {
       textFontSize: 16,
       textFontFamily: "Inter",
     };
-    setBodyCards([...bodyCards, newText]);
+    setBodyCards((prev) => [...prev, newText]);
   };
 
+  // Update a specific field on a card/text block by id
   const updateBodyCard = (id, field, value) => {
-    setBodyCards(
-      bodyCards.map((card) =>
-        card.id === id ? { ...card, [field]: value } : card
-      )
+    setBodyCards((prev) =>
+      prev.map((card) => (card.id === id ? { ...card, [field]: value } : card))
     );
   };
 
+  // Remove a card/text block by id
   const removeBodyCard = (id) => {
-    setBodyCards(bodyCards.filter((card) => card.id !== id));
+    setBodyCards((prev) => prev.filter((card) => card.id !== id));
   };
 
+  // Save the design data to localStorage and navigate back
   const handleSave = () => {
+    // Remove image data before saving to avoid quota issues
     const bodyCardsToSave = bodyCards.map(({ image, ...rest }) => rest);
+
     const dataToSave = {
       showBody,
       bodyCards: bodyCardsToSave,
     };
+
     try {
       localStorage.setItem(storageKey, JSON.stringify(dataToSave));
       console.log("Saved successfully without images");
@@ -84,6 +115,7 @@ function EditPage() {
     }
   };
 
+  // Navigate back to project edit page
   const handleBackClick = () => {
     navigate(`/projects/${projectId}/edit`);
   };
@@ -95,23 +127,12 @@ function EditPage() {
         ← Back
       </button>
 
-      <div className="sport-body">
-        <div className="tab-buttons">
-          <button
-            className={`tab-button ${activeTab === "design" ? "active" : ""}`}
-            onClick={() => setActiveTab("design")}
-          >
-            Design
-          </button>
-          <button
-            className={`tab-button ${activeTab === "preview" ? "active" : ""}`}
-            onClick={() => setActiveTab("preview")}
-          >
-            Preview
-          </button>
-        </div>
+      {pageName && (
+        <h1 className="editing-page-title">Editing the "{pageName}" page</h1>
+      )}
 
-        {activeTab === "design" && (
+      <div className="sport-body">
+        {
           <>
             {showBody && (
               <section className="section">
@@ -354,67 +375,7 @@ function EditPage() {
               </button>
             </div>
           </>
-        )}
-
-        {activeTab === "preview" && (
-          <main className="preview-body">
-            <div className="preview-cards-container">
-              {bodyCards.map((card) =>
-                card.type === "card" ? (
-                  <div key={card.id} className="preview-card">
-                    <img
-                      src={
-                        card.image ||
-                        "https://st2.depositphotos.com/2586633/46477/v/450/depositphotos_464771766-stock-illustration-no-photo-or-blank-image.jpg"
-                      }
-                      alt="Card"
-                      className="preview-card-image"
-                    />
-
-                    <div className="preview-card-bottom">
-                      <p
-                        className="preview-card-price"
-                        style={{
-                          color: card.priceColor,
-                          fontSize: `${card.priceFontSize}px`,
-                          fontFamily: card.priceFontFamily,
-                        }}
-                      >
-                        {card.price}
-                      </p>
-                      <p
-                        className="preview-card-info"
-                        style={{
-                          color: card.infoColor,
-                          fontSize: `${card.infoFontSize}px`,
-                          fontFamily: card.infoFontFamily,
-                        }}
-                      >
-                        {card.info}
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div
-                    key={card.id}
-                    className="preview-text-block"
-                    style={{
-                      color: card.textColor,
-                      fontSize: `${card.textFontSize}px`,
-                      fontFamily: card.textFontFamily,
-                      marginBottom: "1rem",
-                      whiteSpace: "pre-wrap",
-                      width: "100%",
-                      maxWidth: "600px",
-                    }}
-                  >
-                    {card.text}
-                  </div>
-                )
-              )}
-            </div>
-          </main>
-        )}
+        }
       </div>
 
       <Footerbar />

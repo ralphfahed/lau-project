@@ -297,10 +297,18 @@
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
+h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.75rem;
+  text-align: center;
+}
+
 .add-btn-page button:hover {
   background-color: #1e3a8a;
+  color: white;
   transform: translateY(-2px);
 }
+
 /* Override inputs inside header and footer sections */
 .header-bg input[type="text"],
 .header-bg input[type="color"],

@@ -20,19 +20,18 @@ function ProjectsPage() {
 
   const clearProjectDesignData = (projectId) => {
     const prefix = `EditPageDesign-project-${projectId}-`;
-
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key && key.startsWith(prefix)) {
         localStorage.removeItem(key);
-        i--; // Adjust because localStorage size changed
+        i--;
       }
     }
   };
 
-  const handleBackClick = () => {
-    navigate("/home");
-  };
+  // const handleBackClick = () => {
+  //   navigate("/home");
+  // };
 
   const deleteProject = (id) => {
     const projectToDelete = projects.find((project) => project.id === id);
@@ -50,7 +49,6 @@ function ProjectsPage() {
     setConfirmDeleteId(null);
   };
 
-  // Filter and sort by ID
   const filteredAndSortedProjects = [...projects]
     .filter((project) =>
       project.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -62,9 +60,9 @@ function ProjectsPage() {
       <div className="projects-container">
         <Navbar />
         <div className="button-row">
-          <button onClick={handleBackClick} className="back-button">
+          {/* <button onClick={handleBackClick} className="back-button">
             ← Home
-          </button>
+          </button> */}
           <button
             onClick={() => navigate("/create-project")}
             className="add-project-button"
@@ -89,7 +87,7 @@ function ProjectsPage() {
         <table className="projects-table">
           <thead>
             <tr>
-              <th>ID</th>
+              {/* Removed <th>ID</th> */}
               <th>Project Name</th>
               <th>Description</th>
               <th>Actions</th>
@@ -99,7 +97,7 @@ function ProjectsPage() {
             {filteredAndSortedProjects.length > 0 ? (
               filteredAndSortedProjects.map(({ id, name, description }) => (
                 <tr key={id}>
-                  <td>{id}</td>
+                  {/* Removed <td>{id}</td> */}
                   <td>{name}</td>
                   <td>{description || "No description"}</td>
                   <td>
@@ -131,7 +129,7 @@ function ProjectsPage() {
               ))
             ) : (
               <tr>
-                <td colSpan="4" style={{ textAlign: "center" }}>
+                <td colSpan="3" style={{ textAlign: "center" }}>
                   No projects found.
                 </td>
               </tr>

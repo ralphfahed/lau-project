@@ -78,7 +78,16 @@ const CreateProjectPage = () => {
         ← back
       </button>
       <div className="create-project-container">
-        <h1>Create New Project</h1>
+        {/* <div className="text-center mb-8">
+          <img
+            src="https://images.pexels.com/photos/3184296/pexels-photo-3184296.jpeg?auto=compress&cs=tinysrgb&w=400"
+            alt="Project Creation"
+            className=""
+          />
+        </div> */}
+
+        <h1 className="">Create New Project</h1>
+
         <form onSubmit={handleSubmit} className="create-project-form">
           <div className="form-group">
             <label htmlFor="title">

@@ -8,6 +8,8 @@
 .sport-body {
   padding: 1.5rem;
   flex-grow: 1;
+  margin: auto;
+  width: 70%;
 }
 
 /* Tab Buttons */
@@ -664,4 +666,12 @@
 .preview-card-price,
 .preview-card-info {
   margin: 0.25rem 0;
+}
+.editing-page-title {
+  text-align: center;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  color: #222;
+  font-weight: 600;
 }
