@@ -12,6 +12,11 @@
   width: 70%;
 }
 
+.text-style-controls {
+  display: flex;
+  justify-content: space-between;
+}
+
 /* Tab Buttons */
 .tab-buttons {
   max-width: 30%;

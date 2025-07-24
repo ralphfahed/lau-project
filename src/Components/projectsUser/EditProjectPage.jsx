@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "../layout/Navbar";
 import Footerbar from "../layout/Footerbar";
@@ -15,7 +15,7 @@ function EditProjectPage() {
   const resolvedPageId = pageId || "defaultPage";
   const storageKey = `EditPageDesign-project-${numericId}-page-${resolvedPageId}`;
   const globalDesignKey = `EditPageDesign-project-${numericId}-global`;
-  const pageDesignKey = `EditPageDesign-project-${numericId}-page-${resolvedPageId}`;
+
   const [applyGlobalHeader, setApplyGlobalHeader] = useState(true);
   const [applyGlobalFooter, setApplyGlobalFooter] = useState(true);
 
@@ -27,6 +27,7 @@ function EditProjectPage() {
   const [pages, setPages] = useState([]);
   const [error, setError] = useState("");
   const [confirmDeletePageId, setConfirmDeletePageId] = useState(null);
+  const [newPageName, setNewPageName] = useState("");
 
   const [showHeader, setShowHeader] = useState(true);
   const [showFooter, setShowFooter] = useState(true);
@@ -43,7 +44,7 @@ function EditProjectPage() {
   const [footerStyle, setFooterStyle] = useState({
     backgroundColor: "#1e40af",
     color: "#ffffff",
-    padding: "1rem 2rem",
+    padding: "2rem 2rem",
   });
 
   const [footerElements, setFooterElements] = useState([]);
@@ -52,9 +53,6 @@ function EditProjectPage() {
     "https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=400"
   );
 
-  const saveTimeout = useRef(null);
-
-  // Save design data to localStorage
   const saveDesignData = useCallback(() => {
     try {
       const globalData = {
@@ -66,7 +64,7 @@ function EditProjectPage() {
         footerStyle,
         footerElements,
         applyGlobalHeader,
-        applyGlobalFooter, // ← save the global enforcement flags
+        applyGlobalFooter,
       };
 
       localStorage.setItem(globalDesignKey, JSON.stringify(globalData));
@@ -85,23 +83,21 @@ function EditProjectPage() {
     showFooter,
     footerStyle,
     footerElements,
+    applyGlobalHeader,
+    applyGlobalFooter,
     globalDesignKey,
   ]);
 
-  // Load project and pages
   useEffect(() => {
     const storedProjects = JSON.parse(localStorage.getItem("projects")) || [];
-    const selectedProject = storedProjects.find((p) => p.id === numericId); // use numericId here
+    const selectedProject = storedProjects.find((p) => p.id === numericId);
     if (selectedProject) {
-      // Normalize project id to number
       selectedProject.id = Number(selectedProject.id);
-
       const normalizedPages = (selectedProject.pages || []).map((page) =>
         typeof page === "string"
           ? { id: Date.now() + Math.random(), name: page }
           : page
       );
-
       setProject(selectedProject);
       setTitle(selectedProject.name);
       setDescription(selectedProject.description);
@@ -109,7 +105,6 @@ function EditProjectPage() {
     }
   }, [numericId]);
 
-  // Load design data per project/page
   useEffect(() => {
     if (!project) return;
 
@@ -133,19 +128,32 @@ function EditProjectPage() {
     ) {
       syncedHeaderElements = designData.headerElements;
     } else {
-      syncedHeaderElements = projectPages.map((page) => ({
-        id: page.id.toString(),
-        pageId: page.id,
-        content: page.name || "New Item",
-        color: "#ffffff",
-        fontSize: 16,
-        fontFamily: "Inter",
-      }));
+      syncedHeaderElements = projectPages
+        .filter((page) => page.source !== "footer")
+        .map((page) => ({
+          id: page.id.toString(),
+          pageId: page.id,
+          content: page.name || "New Item",
+          color: "#ffffff",
+          fontSize: 16,
+          fontFamily: "Inter",
+        }));
     }
 
     let syncedFooterElements = [];
     if (designData && Array.isArray(designData.footerElements)) {
       syncedFooterElements = designData.footerElements;
+    } else {
+      syncedFooterElements = projectPages
+        .filter((page) => page.source !== "header")
+        .map((page) => ({
+          id: page.id.toString(),
+          pageId: page.id,
+          content: page.name || "New Footer Item",
+          color: "#ffffff",
+          fontSize: 14,
+          fontFamily: "Inter",
+        }));
     }
 
     setFooterStyle(designData?.footerStyle ?? footerStyle);
@@ -158,12 +166,10 @@ function EditProjectPage() {
     setUserIcon(designData?.userIcon ?? userIcon);
     setShowFooter(designData?.showFooter ?? true);
 
-    // ✅ ADD THIS HERE
     setApplyGlobalHeader(designData?.applyGlobalHeader ?? true);
     setApplyGlobalFooter(designData?.applyGlobalFooter ?? true);
-  }, [project, storageKey]);
+  }, [project, globalDesignKey]);
 
-  // Clear junk default header elements if detected
   useEffect(() => {
     const saved = localStorage.getItem(globalDesignKey);
     if (saved) {
@@ -180,14 +186,12 @@ function EditProjectPage() {
         setShowFooter(true);
       }
     }
-  }, [storageKey]);
+  }, [storageKey, globalDesignKey]);
 
-  // Navigate back handler
   const handleBackClick = () => {
     navigate("/projects");
   };
 
-  // Save project handler
   const handleSave = () => {
     if (!title.trim()) {
       setError("Project title is required.");
@@ -244,7 +248,6 @@ function EditProjectPage() {
 
     localStorage.setItem("projects", JSON.stringify(updatedProjects));
 
-    // Save design data here after project update
     saveDesignData();
 
     toast.success("Project updated successfully!", {
@@ -254,59 +257,26 @@ function EditProjectPage() {
     });
   };
 
-  // Add new page
-  const handleAddPage = () => {
-    const newPageId = Date.now();
-
-    const newPage = {
-      id: newPageId,
-      name: "New Page",
-      path: `/page-${newPageId}`,
-      headerSettings: {},
-      footerSettings: {},
-      bodySettings: {},
-    };
-
-    const updatedPages = [...pages, newPage];
-    setPages(updatedPages);
-
-    const newHeaderElement = {
-      id: newPageId.toString(),
-      pageId: newPageId,
-      content: "New Item",
-      color: "#ffffff",
-      fontSize: 16,
-      fontFamily: "Inter",
-    };
-    setHeaderElements((prev) => [...prev, newHeaderElement]);
-  };
-
-  // Request delete confirmation
   const handleRequestDeletePage = (index) => {
     setConfirmDeletePageId(pages[index].id);
   };
 
-  // Confirm deletion
   const confirmDeletion = () => {
     if (confirmDeletePageId === null) return;
 
-    // Remove the page from pages list
     const newPages = pages.filter((page) => page.id !== confirmDeletePageId);
     setPages(newPages);
 
-    // Remove the header element linked to that page
     setHeaderElements((prev) =>
       prev.filter((el) => el.pageId !== confirmDeletePageId)
     );
 
-    // Remove the footer element linked to that page
     setFooterElements((prev) =>
       prev.filter((el) => el.pageId !== confirmDeletePageId)
     );
 
     setConfirmDeletePageId(null);
 
-    // Update projects in localStorage with new pages list
     const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
     const updatedProjects = storedProjects.map((p) =>
       p.id === numericId ? { ...p, pages: newPages } : p
@@ -319,7 +289,6 @@ function EditProjectPage() {
     });
   };
 
-  // Cancel deletion
   const cancelDeletion = () => {
     setConfirmDeletePageId(null);
   };
@@ -329,7 +298,7 @@ function EditProjectPage() {
 
     try {
       const options = {
-        maxSizeMB: 0.02, // 20KB
+        maxSizeMB: 0.02,
         maxWidthOrHeight: 400,
         useWebWorker: true,
       };
@@ -345,7 +314,6 @@ function EditProjectPage() {
     }
   };
 
-  // Header element update
   const updateHeaderElement = (headerElementId, field, value) => {
     setHeaderElements((prev) => {
       const updatedHeaderEls = prev.map((el) => {
@@ -372,13 +340,36 @@ function EditProjectPage() {
     });
   };
 
-  // Add header element
+  // const handleAddPage = () => {
+  //   console.log("Add Page clicked"); // Debug
+
+  //   if (!newPageName.trim()) {
+  //     console.log("New page name empty, not adding");
+  //     return;
+  //   }
+
+  //   const newPage = {
+  //     id: Date.now().toString(),
+  //     name: newPageName.trim(),
+  //     source: "header",
+  //     design: { header: {}, bodyCards: [], footer: {} },
+  //   };
+
+  //   setPages((prevPages) => [...prevPages, newPage]);
+  //   setNewPageName("");
+  // };
+
   const addHeaderElement = () => {
     const newId = Date.now();
+    // Count existing "New Item" pages to append a number suffix
+    const newItemCount =
+      pages.filter((p) => p.name.startsWith("New Item")).length + 1;
 
     const newPage = {
       id: newId,
-      name: "New Item",
+      name: `New Item ${newItemCount}`,
+      source: "header", // Add this line
+
       path: `/page-${newId}`,
       headerSettings: {},
       footerSettings: {},
@@ -391,7 +382,7 @@ function EditProjectPage() {
     const newElement = {
       id: newId.toString(),
       pageId: newId,
-      content: "New Item",
+      content: `New Item ${newItemCount}`,
       color: "#ffffff",
       fontSize: 16,
       fontFamily: "Inter",
@@ -400,7 +391,6 @@ function EditProjectPage() {
     setHeaderElements((prev) => [...prev, newElement]);
   };
 
-  // Remove header element
   const removeHeaderElement = (idToRemove) => {
     const elementToRemove = headerElements.find((el) => el.id === idToRemove);
 
@@ -414,14 +404,12 @@ function EditProjectPage() {
     }
   };
 
-  // Footer element updates
   const updateFooterElement = (id, field, value) => {
     setFooterElements((prev) =>
       prev.map((el) => {
         if (el.id === id) {
           const updatedElement = { ...el, [field]: value };
 
-          // If the content changed, update the corresponding page name as well
           if (field === "content" && el.pageId) {
             const pageIndex = pages.findIndex((page) => page.id === el.pageId);
             if (pageIndex !== -1) {
@@ -443,26 +431,28 @@ function EditProjectPage() {
 
   const addFooterElement = () => {
     const newId = Date.now();
+    // Count existing "New Footer Item" pages to append a number suffix
+    const newItemCount =
+      pages.filter((p) => p.name.startsWith("New Footer Item")).length + 1;
 
-    // Create new page for this footer element
     const newPage = {
       id: newId,
-      name: "New Page",
+      name: `New Footer Item ${newItemCount}`,
+      source: "footer",
       path: `/page-${newId}`,
       headerSettings: {},
       footerSettings: {},
       bodySettings: {},
     };
 
-    // Add page to pages list
     setPages((prevPages) => [...prevPages, newPage]);
 
-    // Add new footer element linked to this page
     const newFooterItem = {
       id: newId.toString(),
-      pageId: newId, // link footer element to page id
-      content: "New Footer Item",
-      color: "#ffffff",
+      pageId: newId,
+      content: `New Footer Item ${newItemCount}`,
+
+      color: "#ffffffff",
       fontSize: 14,
       fontFamily: "Inter",
     };
@@ -471,13 +461,10 @@ function EditProjectPage() {
   };
 
   const removeFooterElement = (idToRemove) => {
-    // Find footer element to remove
     const elementToRemove = footerElements.find((el) => el.id === idToRemove);
 
-    // Remove footer element
     setFooterElements((prev) => prev.filter((el) => el.id !== idToRemove));
 
-    // Remove corresponding page linked by pageId
     if (elementToRemove && elementToRemove.pageId) {
       setPages((prevPages) =>
         prevPages.filter((page) => page.id !== elementToRemove.pageId)
@@ -485,21 +472,18 @@ function EditProjectPage() {
     }
   };
 
-  // Page name change handler
   const handlePageNameChange = (index, newName) => {
     const updatedPages = [...pages];
     updatedPages[index] = { ...updatedPages[index], name: newName };
     setPages(updatedPages);
 
     const page = updatedPages[index];
-    // Update header elements
     setHeaderElements((prev) =>
       prev.map((el) =>
         el.pageId === page.id ? { ...el, content: newName } : el
       )
     );
 
-    // Update footer elements
     setFooterElements((prev) =>
       prev.map((el) =>
         el.pageId === page.id ? { ...el, content: newName } : el
@@ -512,10 +496,12 @@ function EditProjectPage() {
   return (
     <div className="page-wrapper">
       <Navbar />
-      <button onClick={handleBackClick} className="back-button">
-        ← back
-      </button>
-      <h2>Edit "{project.name}" project</h2>
+      <div className="title-roject">
+        <button onClick={handleBackClick} className="back-button-edit-page">
+          ← back
+        </button>
+        <h2>Edit "{project.name}" project</h2>
+      </div>
 
       <div className="edit-project-container">
         {error && <p className="error">{error}</p>}
@@ -870,9 +856,10 @@ function EditProjectPage() {
 
         {/* Pages list */}
         <h4>Pages:</h4>
-        <div className="add-btn-page">
+        {/* <div className="add-btn-page">
           <button onClick={handleAddPage}>Add Page</button>
-        </div>
+        </div> */}
+
         <ul className="pages-list">
           {pages.map((page, i) => (
             <li key={page.id} className="page-item">
@@ -882,6 +869,10 @@ function EditProjectPage() {
                 onChange={(e) => handlePageNameChange(i, e.target.value)}
                 placeholder={`Page ${i + 1} Name`}
               />
+              <span className="tag">
+                {page.source ? page.source : "header"} page
+              </span>
+              {/* ← insert here */}
               <div className="page-buttons">
                 <button
                   className="edit-content-button"

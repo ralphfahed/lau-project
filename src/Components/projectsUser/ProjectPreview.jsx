@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import "./PageEditorPage";
+import "./ProjectPreview.css";
 
 function ProjectPreview() {
   const { projectId } = useParams();
@@ -21,7 +21,7 @@ function ProjectPreview() {
     if (!selectedProject) return;
 
     if (selectedProject.pages.length > 0) {
-      setSelectedPageId(selectedProject.pages[0].id);
+      setSelectedPageId(String(selectedProject.pages[0].id));
     }
 
     const loadedDesignData = {};
@@ -30,7 +30,7 @@ function ProjectPreview() {
       const saved = localStorage.getItem(key);
       if (saved) {
         try {
-          loadedDesignData[page.id] = JSON.parse(saved);
+          loadedDesignData[String(page.id)] = JSON.parse(saved);
         } catch (e) {
           console.warn(`Failed to parse design for page ${page.name}`, e);
         }
@@ -53,7 +53,6 @@ function ProjectPreview() {
     return (
       <div style={{ padding: "1rem" }}>
         <h2>Project not found</h2>
-        <button onClick={() => navigate(-1)}>Go Back</button>
       </div>
     );
   }
@@ -62,7 +61,6 @@ function ProjectPreview() {
     return (
       <div style={{ padding: "1rem" }}>
         <h2>No pages created yet</h2>
-        <button onClick={() => navigate(-1)}>Go Back</button>
       </div>
     );
   }
@@ -71,7 +69,9 @@ function ProjectPreview() {
     return <div style={{ padding: "1rem" }}>Loading pages...</div>;
   }
 
-  const selectedPage = project.pages.find((p) => p.id === selectedPageId);
+  const selectedPage = project.pages.find(
+    (p) => String(p.id) === selectedPageId
+  );
   const design = designData[selectedPageId] || {};
   const showHeader = globalDesign?.showHeader ?? true;
   const showFooter = globalDesign?.showFooter ?? true;
@@ -85,7 +85,7 @@ function ProjectPreview() {
         return (
           <button
             key={el.id}
-            onClick={() => setSelectedPageId(matchedPage.id)}
+            onClick={() => setSelectedPageId(String(matchedPage.id))}
             style={{
               color: el.color,
               fontSize: `${el.fontSize}px`,
@@ -95,8 +95,11 @@ function ProjectPreview() {
               cursor: "pointer",
               padding: 0,
               textDecoration:
-                matchedPage.id === selectedPageId ? "underline" : "none",
-              fontWeight: matchedPage.id === selectedPageId ? "bold" : "normal",
+                String(matchedPage.id) === selectedPageId
+                  ? "underline"
+                  : "none",
+              fontWeight:
+                String(matchedPage.id) === selectedPageId ? "bold" : "normal",
             }}
           >
             {el.content}
@@ -119,58 +122,22 @@ function ProjectPreview() {
     });
 
   return (
-    <div>
-      {/* Back Button */}
-      <button
-        onClick={() => navigate("/projects")}
-        style={{
-          padding: "0.5rem 1rem",
-          backgroundColor: "#1e40af",
-          color: "white",
-          border: "none",
-          borderRadius: "4px",
-          cursor: "pointer",
-          fontSize: "1rem",
-          fontWeight: "600",
-          transition: "background-color 0.3s ease",
-          margin: "1rem",
-        }}
-        onMouseEnter={(e) =>
-          (e.currentTarget.style.backgroundColor = "#3b82f6")
-        }
-        onMouseLeave={(e) =>
-          (e.currentTarget.style.backgroundColor = "#1e40af")
-        }
-      >
-        ← Back
-      </button>
-
-      {/* Header Preview */}
+    <div className="page-wrapper">
       {showHeader && (
         <header
+          className="pp-header"
           style={{
             backgroundColor:
               globalDesign?.headerStyle?.backgroundColor || "#1e40af",
             color: globalDesign?.headerStyle?.color || "#fff",
             padding: globalDesign?.headerStyle?.padding || "1rem 2rem",
-            display: "flex",
-            alignItems: "center",
-            gap: "1rem",
-            flexWrap: "wrap",
-            borderRadius: "4px",
-            marginBottom: "1rem",
           }}
         >
           {globalDesign?.userIcon && (
             <img
               src={globalDesign.userIcon}
               alt="User Icon"
-              style={{
-                width: 40,
-                height: 40,
-                borderRadius: "50%",
-                objectFit: "cover",
-              }}
+              className="pp-user-icon"
             />
           )}
           {globalDesign?.headerElements &&
@@ -178,25 +145,24 @@ function ProjectPreview() {
         </header>
       )}
 
-      {/* Body Content */}
-      {design.showBody && design.bodyCards?.length > 0 ? (
-        <>
-          {/* Image Cards */}
-          {design.bodyCards.some((c) => c.type === "card") && (
-            <section
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-                gap: "1rem",
-                marginBottom: "2rem",
-              }}
-            >
-              {design.bodyCards
-                .filter((card) => card.type === "card")
-                .map((card) => (
+      <main className="body-container">
+        {design.showBody && design.bodyCards?.length > 0 ? (
+          <section
+            style={{
+              display: "flex",
+              flexWrap: "wrap",
+              gap: "1rem",
+              margin: "2rem",
+            }}
+          >
+            {design.bodyCards.map((card) => {
+              if (card.type === "card") {
+                return (
                   <div
                     key={card.id}
                     style={{
+                      flex: "0 0 calc((100% / 4) - 0.75rem)",
+                      boxSizing: "border-box",
                       border: "1px solid #ddd",
                       borderRadius: 4,
                       padding: "1rem",
@@ -212,6 +178,7 @@ function ProjectPreview() {
                     />
                     <p
                       style={{
+                        textAlign: card.PriceAlignment || "left",
                         color: card.priceColor,
                         fontSize: `${card.priceFontSize}px`,
                         fontFamily: card.priceFontFamily,
@@ -224,6 +191,7 @@ function ProjectPreview() {
                     </p>
                     <p
                       style={{
+                        textAlign: card.infoAlignment || "left",
                         color: card.infoColor,
                         fontSize: `${card.infoFontSize}px`,
                         fontFamily: card.infoFontFamily,
@@ -233,56 +201,43 @@ function ProjectPreview() {
                       {card.info}
                     </p>
                   </div>
-                ))}
-            </section>
-          )}
-
-          {/* Text Blocks */}
-          {design.bodyCards.some((c) => c.type === "text") && (
-            <section
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                gap: "1rem",
-                marginBottom: "2rem",
-              }}
-            >
-              {design.bodyCards
-                .filter((card) => card.type === "text")
-                .map((text) => (
+                );
+              } else if (card.type === "text") {
+                return (
                   <div
-                    key={text.id}
+                    key={card.id}
                     style={{
+                      flex: "0 0 100%",
                       padding: "1rem",
-                      border: "1px dashed #aaa",
                       borderRadius: "4px",
-                      fontSize: `${text.textFontSize || 18}px`,
-                      fontFamily: text.fontFamily || "sans-serif",
-                      color: text.textColor || "#333",
+                      fontSize: `${card.textFontSize || 18}px`,
+                      fontFamily: card.fontFamily || "sans-serif",
+                      color: card.textColor || "#333",
+                      textAlign: card.alignment || "left",
                     }}
                   >
-                    {text.text || "No content"}
+                    {card.text || "No content"}
                   </div>
-                ))}
-            </section>
-          )}
-        </>
-      ) : (
-        <p>No body content to show</p>
-      )}
+                );
+              }
+              return null;
+            })}
+          </section>
+        ) : (
+          <div className="body-cont">
+            <p>No body content to show</p>
+          </div>
+        )}
+      </main>
 
-      {/* Footer Preview */}
       {showFooter && (
         <footer
+          className="pp-footer"
           style={{
             backgroundColor:
               globalDesign?.footerStyle?.backgroundColor || "#1e40af",
             color: globalDesign?.footerStyle?.color || "#fff",
             padding: globalDesign?.footerStyle?.padding || "1rem 2rem",
-            display: "flex",
-            gap: "1rem",
-            flexWrap: "wrap",
-            borderRadius: "4px",
           }}
         >
           {globalDesign?.footerElements &&

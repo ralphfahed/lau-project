@@ -11,11 +11,6 @@ const Navbar = () => {
 
     const navigate = useNavigate();
 
-    const handleProjectsClick = () => {
-      setIsOpen(false); // close menu
-      navigate("/projects"); // navigate to projects page
-    };
-
     return (
       <div style={{ position: "relative", display: "inline-block" }}>
         <div
@@ -39,14 +34,7 @@ const Navbar = () => {
             >
               {userName}
             </div>
-            {/* 
-            <div
-              className="clickable-text"
-              onClick={handleProjectsClick}
-              style={{ cursor: "pointer" }}
-            >
-              My Projects
-            </div> */}
+
             <div onClick={onLogout} className="logout-button">
               Logout
             </div>
@@ -86,7 +74,7 @@ const Navbar = () => {
       <div id="welcome">
         <div id="icon">
           <img
-            src="https://img.icons8.com/?size=100&id=ddiDblGivpG2&format=png&color=000000"
+            src="https://cdn.vectorstock.com/i/1000x1000/68/56/location-chalk-white-icon-on-black-background-vector-31586856.webp"
             width="35"
             height="35"
             alt="Logo"
@@ -97,7 +85,7 @@ const Navbar = () => {
           {userName ? (
             <UserMenu userName={userName} onLogout={handleLogout} />
           ) : (
-            <Link to="/login">Login</Link> // <-- changed here
+            <Link to="/login">Login</Link> // eza ken log in farje usermenu eza no khedo 3l login
           )}
         </div>
       </div>

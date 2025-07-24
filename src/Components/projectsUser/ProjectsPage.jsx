@@ -18,8 +18,40 @@ function ProjectsPage() {
     setProjects(storedProjects);
   }, []);
 
-  const clearProjectDesignData = (projectId) => {
-    const prefix = `EditPageDesign-project-${projectId}-`;
+  // const clearProjectDesignData = (projectId) => {
+  //   const prefix = `EditPageDesign-project-${projectId}-`;
+  //   for (let i = 0; i < localStorage.length; i++) {
+  //     const key = localStorage.key(i);
+  //     if (key && key.startsWith(prefix)) {
+  //       localStorage.removeItem(key);
+  //       i--;
+  //     }
+  //   }
+  // };
+
+  // const deleteProject = (id) => {
+  //   const projectToDelete = projects.find((project) => project.id === id);
+  //   if (projectToDelete) {
+  //     clearProjectDesignData(projectToDelete.id);
+  //   }
+
+  //   const updatedProjects = projects.filter((project) => project.id !== id);
+  //   localStorage.setItem("projects", JSON.stringify(updatedProjects));
+  //   setProjects(updatedProjects);
+  //   toast.success("Project deleted successfully!", {
+  //     position: "top-center",
+  //     autoClose: 1000,
+  //   });
+  //   setConfirmDeleteId(null);
+  // };
+  const deleteProjectAndDesignData = (id) => {
+    // Remove project from the projects list
+    const updatedProjects = projects.filter((project) => project.id !== id);
+    localStorage.setItem("projects", JSON.stringify(updatedProjects));
+    setProjects(updatedProjects);
+
+    // Remove all design data related to this project
+    const prefix = `EditPageDesign-project-${id}-`;
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key && key.startsWith(prefix)) {
@@ -27,25 +59,8 @@ function ProjectsPage() {
         i--;
       }
     }
-  };
 
-  // const handleBackClick = () => {
-  //   navigate("/home");
-  // };
-
-  const deleteProject = (id) => {
-    const projectToDelete = projects.find((project) => project.id === id);
-    if (projectToDelete) {
-      clearProjectDesignData(projectToDelete.id);
-    }
-
-    const updatedProjects = projects.filter((project) => project.id !== id);
-    localStorage.setItem("projects", JSON.stringify(updatedProjects));
-    setProjects(updatedProjects);
-    toast.success("Project deleted successfully!", {
-      position: "top-center",
-      autoClose: 1000,
-    });
+    // Hide the delete confirmation popup
     setConfirmDeleteId(null);
   };
 
@@ -60,9 +75,7 @@ function ProjectsPage() {
       <div className="projects-container">
         <Navbar />
         <div className="button-row">
-          {/* <button onClick={handleBackClick} className="back-button">
-            ← Home
-          </button> */}
+          <div className="projects-title">My Projects</div>
           <button
             onClick={() => navigate("/create-project")}
             className="add-project-button"
@@ -71,13 +84,11 @@ function ProjectsPage() {
           </button>
         </div>
 
-        <h2 className="projects-title">My Projects</h2>
-
         <div className="search-wrapper">
           <FaSearch className="search-icon" />
           <input
             type="text"
-            placeholder="Search projects..."
+            placeholder="Search projects by name..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
@@ -104,7 +115,12 @@ function ProjectsPage() {
                     <div className="action-buttons">
                       <button
                         className="action-button"
-                        onClick={() => navigate(`/projects/${id}/preview`)}
+                        onClick={() =>
+                          window.open(
+                            `${window.location.origin}/projects/${id}/preview`,
+                            "_blank"
+                          )
+                        }
                         title="View"
                       >
                         <FaEye />
@@ -151,7 +167,7 @@ function ProjectsPage() {
               Cancel
             </button>
             <button
-              onClick={() => deleteProject(confirmDeleteId)}
+              onClick={() => deleteProjectAndDesignData(confirmDeleteId)}
               className="confirm-button"
             >
               Confirm

@@ -11,13 +11,9 @@ function EditPage() {
 
   const [showBody, setShowBody] = useState(true);
   const [bodyCards, setBodyCards] = useState([]);
-  const [activeTab, setActiveTab] = useState("design");
   const [pageName, setPageName] = useState("");
 
   useEffect(() => {
-    console.log("projectId:", projectId);
-    console.log("pageId:", pageId);
-
     // Load saved design data from localStorage
     const saved = localStorage.getItem(storageKey);
     if (saved) {
@@ -26,28 +22,20 @@ function EditPage() {
       if (Array.isArray(data.bodyCards)) setBodyCards(data.bodyCards);
     }
 
-    // Load project and page name from projects data in localStorage
+    // Load project and page name from localStorage
     const projectData = JSON.parse(localStorage.getItem("projects")) || [];
     const currentProject = projectData.find(
-      (p) => p.id.toString() === projectId
+      (p) => String(p.id) === String(projectId)
     );
 
-    console.log("currentProject:", currentProject);
-
     if (currentProject) {
-      // Important: convert page IDs to string to match with pageId param
       const currentPage = currentProject.pages.find(
         (pg) => String(pg.id) === String(pageId)
       );
-      if (currentPage) {
-        setPageName(currentPage.name);
-      } else {
-        setPageName(`Page ${pageId}`); // fallback if page not found
-      }
+      setPageName(currentPage?.name || `Page ${pageId}`);
     }
   }, [storageKey, projectId, pageId]);
 
-  // Add a new card block to the body
   const addBodyCard = () => {
     const newCard = {
       id: Date.now().toString(),
@@ -61,11 +49,13 @@ function EditPage() {
       infoColor: "#000000",
       infoFontSize: 14,
       infoFontFamily: "Inter",
+      alignment: "left",
+      priceAlignment: "left", // <-- change here (add this)
+      infoAlignment: "left", // <-- add this too
     };
     setBodyCards((prev) => [...prev, newCard]);
   };
 
-  // Add a new text block to the body
   const addBodyText = () => {
     const newText = {
       id: Date.now().toString(),
@@ -74,25 +64,22 @@ function EditPage() {
       textColor: "#000000",
       textFontSize: 16,
       textFontFamily: "Inter",
+      alignment: "left", // ✅ added missing alignment for consistency
     };
     setBodyCards((prev) => [...prev, newText]);
   };
 
-  // Update a specific field on a card/text block by id
   const updateBodyCard = (id, field, value) => {
     setBodyCards((prev) =>
       prev.map((card) => (card.id === id ? { ...card, [field]: value } : card))
     );
   };
 
-  // Remove a card/text block by id
   const removeBodyCard = (id) => {
     setBodyCards((prev) => prev.filter((card) => card.id !== id));
   };
 
-  // Save the design data to localStorage and navigate back
   const handleSave = () => {
-    // Remove image data before saving to avoid quota issues
     const bodyCardsToSave = bodyCards.map(({ image, ...rest }) => rest);
 
     const dataToSave = {
@@ -102,7 +89,6 @@ function EditPage() {
 
     try {
       localStorage.setItem(storageKey, JSON.stringify(dataToSave));
-      console.log("Saved successfully without images");
       navigate(-1);
     } catch (e) {
       if (e.name === "QuotaExceededError") {
@@ -115,7 +101,6 @@ function EditPage() {
     }
   };
 
-  // Navigate back to project edit page
   const handleBackClick = () => {
     navigate(`/projects/${projectId}/edit`);
   };
@@ -132,200 +117,80 @@ function EditPage() {
       )}
 
       <div className="sport-body">
-        {
-          <>
-            {showBody && (
-              <section className="section">
-                <h3 className="section-title body-title">Body Style</h3>
+        {showBody && (
+          <section className="section">
+            <h3 className="section-title body-title">Body Style</h3>
 
-                <div className="body-controls">
-                  <button onClick={addBodyCard} className="addd-btn">
-                    Add Card
-                  </button>
-                  <button onClick={addBodyText} className="addd-btn">
-                    Add Text
-                  </button>
-                </div>
+            <div className="body-controls">
+              <button onClick={addBodyCard} className="addd-btn">
+                Add Card
+              </button>
+              <button onClick={addBodyText} className="addd-btn">
+                Add Text
+              </button>
+            </div>
 
-                {bodyCards.map((card) => (
-                  <div key={card.id} className="body-card">
-                    <button
-                      className="remove-btn card-remove"
-                      onClick={() => removeBodyCard(card.id)}
-                      aria-label="Remove body card"
-                    >
-                      X
-                    </button>
+            {bodyCards.map((card) => (
+              <div key={card.id} className="body-card">
+                <button
+                  className="remove-btn card-remove"
+                  onClick={() => removeBodyCard(card.id)}
+                  aria-label="Remove body card"
+                >
+                  X
+                </button>
 
-                    {card.type === "card" ? (
-                      <>
-                        <div className="image-section">
-                          <h4>Image</h4>
-                          <div className="edit-image">
-                            <input
-                              type="file"
-                              accept="image/*"
-                              onChange={(e) => {
-                                const file = e.target.files[0];
-                                if (file) {
-                                  const reader = new FileReader();
-                                  reader.onloadend = () =>
-                                    updateBodyCard(
-                                      card.id,
-                                      "image",
-                                      reader.result
-                                    );
-                                  reader.readAsDataURL(file);
-                                }
-                              }}
-                              className="file-input"
-                            />
-                            <img
-                              src={
-                                card.image ||
-                                "https://st2.depositphotos.com/2586633/46477/v/450/depositphotos_464771766-stock-illustration-no-photo-or-blank-image.jpg"
-                              }
-                              alt="Card"
-                              className="card-image"
-                            />
-                          </div>
-                        </div>
-
-                        <div className="body-info">
-                          <h4>Price</h4>
-                          <div className="body-style">
-                            <input
-                              type="text"
-                              value={card.price}
-                              onChange={(e) =>
-                                updateBodyCard(card.id, "price", e.target.value)
-                              }
-                              className="text-input"
-                            />
-                            <input
-                              type="color"
-                              value={card.priceColor}
-                              onChange={(e) =>
-                                updateBodyCard(
-                                  card.id,
-                                  "priceColor",
-                                  e.target.value
-                                )
-                              }
-                              className="color-input"
-                            />
-                            <input
-                              type="number"
-                              min={8}
-                              max={72}
-                              value={card.priceFontSize}
-                              onChange={(e) =>
-                                updateBodyCard(
-                                  card.id,
-                                  "priceFontSize",
-                                  parseInt(e.target.value)
-                                )
-                              }
-                              className="number-input"
-                            />
-                            <select
-                              value={card.priceFontFamily}
-                              onChange={(e) =>
-                                updateBodyCard(
-                                  card.id,
-                                  "priceFontFamily",
-                                  e.target.value
-                                )
-                              }
-                              className="select-input"
-                            >
-                              <option value="Inter">Inter</option>
-                              <option value="Arial">Arial</option>
-                              <option value="Helvetica">Helvetica</option>
-                              <option value="Georgia">Georgia</option>
-                              <option value="Times New Roman">
-                                Times New Roman
-                              </option>
-                            </select>
-                          </div>
-                        </div>
-
-                        <div className="body-info">
-                          <h4>Info</h4>
-                          <div className="body-style">
-                            <input
-                              type="text"
-                              value={card.info}
-                              onChange={(e) =>
-                                updateBodyCard(card.id, "info", e.target.value)
-                              }
-                              className="text-input"
-                            />
-                            <input
-                              type="color"
-                              value={card.infoColor}
-                              onChange={(e) =>
-                                updateBodyCard(
-                                  card.id,
-                                  "infoColor",
-                                  e.target.value
-                                )
-                              }
-                              className="color-input"
-                            />
-                            <input
-                              type="number"
-                              min={8}
-                              max={72}
-                              value={card.infoFontSize}
-                              onChange={(e) =>
-                                updateBodyCard(
-                                  card.id,
-                                  "infoFontSize",
-                                  parseInt(e.target.value)
-                                )
-                              }
-                              className="number-input"
-                            />
-                            <select
-                              value={card.infoFontFamily}
-                              onChange={(e) =>
-                                updateBodyCard(
-                                  card.id,
-                                  "infoFontFamily",
-                                  e.target.value
-                                )
-                              }
-                              className="select-input"
-                            >
-                              <option value="Inter">Inter</option>
-                              <option value="Arial">Arial</option>
-                              <option value="Helvetica">Helvetica</option>
-                              <option value="Georgia">Georgia</option>
-                              <option value="Times New Roman">
-                                Times New Roman
-                              </option>
-                            </select>
-                          </div>
-                        </div>
-                      </>
-                    ) : (
-                      <div className="text-block-editor">
-                        <h4>Text Block</h4>
-                        <textarea
-                          value={card.text}
-                          onChange={(e) =>
-                            updateBodyCard(card.id, "text", e.target.value)
+                {card.type === "card" ? (
+                  <>
+                    <div className="image-section">
+                      <h4>Image</h4>
+                      <div className="edit-image">
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                              const reader = new FileReader();
+                              reader.onloadend = () =>
+                                updateBodyCard(card.id, "image", reader.result);
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                          className="file-input"
+                        />
+                        <img
+                          src={
+                            card.image ||
+                            "https://st2.depositphotos.com/2586633/46477/v/450/depositphotos_464771766-stock-illustration-no-photo-or-blank-image.jpg"
                           }
-                          className="text-area-input"
-                          rows={4}
-                          style={{ width: "100%", resize: "vertical" }}
+                          alt="Card"
+                          className="card-image"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Price */}
+                    <div className="body-info">
+                      <h4>Price</h4>
+                      <div className="body-style">
+                        <input
+                          type="text"
+                          value={card.price}
+                          onChange={(e) =>
+                            updateBodyCard(card.id, "price", e.target.value)
+                          }
+                          className="text-input"
                         />
                         <input
                           type="color"
-                          value={card.textColor}
+                          value={card.priceColor}
                           onChange={(e) =>
-                            updateBodyCard(card.id, "textColor", e.target.value)
+                            updateBodyCard(
+                              card.id,
+                              "priceColor",
+                              e.target.value
+                            )
                           }
                           className="color-input"
                         />
@@ -333,22 +198,22 @@ function EditPage() {
                           type="number"
                           min={8}
                           max={72}
-                          value={card.textFontSize}
+                          value={card.priceFontSize}
                           onChange={(e) =>
                             updateBodyCard(
                               card.id,
-                              "textFontSize",
+                              "priceFontSize",
                               parseInt(e.target.value)
                             )
                           }
                           className="number-input"
                         />
                         <select
-                          value={card.textFontFamily}
+                          value={card.priceFontFamily}
                           onChange={(e) =>
                             updateBodyCard(
                               card.id,
-                              "textFontFamily",
+                              "priceFontFamily",
                               e.target.value
                             )
                           }
@@ -362,20 +227,176 @@ function EditPage() {
                             Times New Roman
                           </option>
                         </select>
+                        <select
+                          value={card.priceAlignment}
+                          onChange={(e) =>
+                            updateBodyCard(
+                              card.id,
+                              "priceAlignment",
+                              e.target.value
+                            )
+                          }
+                          className="select-input"
+                        >
+                          <option value="left">Left</option>
+                          <option value="center">Center</option>
+                          <option value="right">Right</option>
+                        </select>
                       </div>
-                    )}
-                  </div>
-                ))}
-              </section>
-            )}
+                    </div>
 
-            <div className="save-section">
-              <button onClick={handleSave} className="save-btn">
-                Save Changes & Return
-              </button>
-            </div>
-          </>
-        }
+                    {/* Info */}
+                    <div className="body-info">
+                      <h4>Info</h4>
+                      <div className="body-style">
+                        <input
+                          type="text"
+                          value={card.info}
+                          onChange={(e) =>
+                            updateBodyCard(card.id, "info", e.target.value)
+                          }
+                          className="text-input"
+                        />
+                        <input
+                          type="color"
+                          value={card.infoColor}
+                          onChange={(e) =>
+                            updateBodyCard(card.id, "infoColor", e.target.value)
+                          }
+                          className="color-input"
+                        />
+                        <input
+                          type="number"
+                          min={8}
+                          max={72}
+                          value={card.infoFontSize}
+                          onChange={(e) =>
+                            updateBodyCard(
+                              card.id,
+                              "infoFontSize",
+                              parseInt(e.target.value)
+                            )
+                          }
+                          className="number-input"
+                        />
+                        <select
+                          value={card.infoFontFamily}
+                          onChange={(e) =>
+                            updateBodyCard(
+                              card.id,
+                              "infoFontFamily",
+                              e.target.value
+                            )
+                          }
+                          className="select-input"
+                        >
+                          <option value="Inter">Inter</option>
+                          <option value="Arial">Arial</option>
+                          <option value="Helvetica">Helvetica</option>
+                          <option value="Georgia">Georgia</option>
+                          <option value="Times New Roman">
+                            Times New Roman
+                          </option>
+                        </select>
+                        <select
+                          value={card.infoAlignment}
+                          onChange={(e) =>
+                            updateBodyCard(
+                              card.id,
+                              "infoAlignment",
+                              e.target.value
+                            )
+                          }
+                          className="select-input"
+                        >
+                          <option value="left">Left</option>
+                          <option value="center">Center</option>
+                          <option value="right">Right</option>
+                        </select>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className="text-block-editor">
+                    <h4>Text Block</h4>
+                    <textarea
+                      value={card.text}
+                      onChange={(e) =>
+                        updateBodyCard(card.id, "text", e.target.value)
+                      }
+                      className="text-area-input"
+                      rows={4}
+                      style={{
+                        width: "100%",
+                        resize: "vertical",
+                        textAlign: card.alignment || "left",
+                      }}
+                    />
+                    <div className="text-style-controls">
+                      <input
+                        type="color"
+                        value={card.textColor}
+                        onChange={(e) =>
+                          updateBodyCard(card.id, "textColor", e.target.value)
+                        }
+                        className="color-input"
+                      />
+                      <input
+                        type="number"
+                        min={8}
+                        max={72}
+                        value={card.textFontSize}
+                        onChange={(e) =>
+                          updateBodyCard(
+                            card.id,
+                            "textFontSize",
+                            parseInt(e.target.value)
+                          )
+                        }
+                        className="number-input"
+                      />
+                      <select
+                        value={card.textFontFamily}
+                        onChange={(e) =>
+                          updateBodyCard(
+                            card.id,
+                            "textFontFamily",
+                            e.target.value
+                          )
+                        }
+                        className="select-input"
+                      >
+                        <option value="Inter">Inter</option>
+                        <option value="Arial">Arial</option>
+                        <option value="Helvetica">Helvetica</option>
+                        <option value="Georgia">Georgia</option>
+                        <option value="Times New Roman">Times New Roman</option>
+                      </select>
+
+                      <select
+                        value={card.alignment || "left"}
+                        onChange={(e) =>
+                          updateBodyCard(card.id, "alignment", e.target.value)
+                        }
+                        className="select-input"
+                      >
+                        <option value="left">Left</option>
+                        <option value="center">Center</option>
+                        <option value="right">Right</option>
+                      </select>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </section>
+        )}
+
+        <div className="save-section">
+          <button onClick={handleSave} className="save-btn">
+            Save Changes & Return
+          </button>
+        </div>
       </div>
 
       <Footerbar />
