@@ -99,7 +99,7 @@ const LoginRegister = () => {
       return;
     }
 
-    fetch("http://localhost:5000/login", {
+    fetch("http://localhost:5000/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -371,7 +371,7 @@ const LoginRegister = () => {
             <div className="register-link">
               <p>
                 Already have an account?{" "}
-                <a href="/login" onClick={loginLink}>
+                <a href="/" onClick={loginLink}>
                   Login
                 </a>
               </p>

@@ -6,8 +6,8 @@ import "./PageEditorPage.css";
 
 function EditPage() {
   const navigate = useNavigate();
-  const { pageId = "defaultPage", projectId } = useParams();
-  const storageKey = `EditPageDesign-project-${projectId}-page-${pageId}`;
+  const { pageId = "defaultPage", projectId } = useParams(); // oit return an object based on the current route path.
+  const storageKey = `EditPageDesign-project-${projectId}-page-${pageId}`; //for saving and loading the correct data per project and page
 
   const [showBody, setShowBody] = useState(true);
   const [bodyCards, setBodyCards] = useState([]);
@@ -181,6 +181,7 @@ function EditPage() {
                             updateBodyCard(card.id, "price", e.target.value)
                           }
                           className="text-input"
+                          // style={{ textAlign: card.priceAlignment || "left" }}
                         />
                         <input
                           type="color"

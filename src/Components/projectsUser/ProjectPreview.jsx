@@ -178,7 +178,7 @@ function ProjectPreview() {
                     />
                     <p
                       style={{
-                        textAlign: card.PriceAlignment || "left",
+                        textAlign: card.priceAlignment || "left",
                         color: card.priceColor,
                         fontSize: `${card.priceFontSize}px`,
                         fontFamily: card.priceFontFamily,

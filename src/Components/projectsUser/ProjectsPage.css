@@ -186,3 +186,73 @@
   background-color: #d9534f;
   color: white;
 }
+/* Responsive Styles */
+
+@media screen and (max-width: 768px) {
+  .button-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+  }
+
+  .projects-title {
+    font-size: 22px;
+    text-align: center;
+    padding-left: 0;
+  }
+
+  .projects-table th,
+  .projects-table td {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .add-project-button,
+  .action-button,
+  .cancel-button,
+  .confirm-button {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  .delete-popup {
+    width: 90%;
+    padding: 20px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .projects-table {
+    font-size: 12px;
+  }
+
+  .projects-table th,
+  .projects-table td {
+    padding: 6px;
+  }
+
+  .projects-title {
+    font-size: 20px;
+  }
+
+  .search-input {
+    font-size: 14px;
+    padding: 0.4rem 1rem;
+    width: 135px;
+  }
+
+  .search-icon {
+    left: 15px;
+    font-size: 14px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    width: 40px;
+    gap: 8px;
+    margin: auto;
+  }
+  .search-icon {
+    display: none !important;
+  }
+}

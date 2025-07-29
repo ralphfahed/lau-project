@@ -636,7 +636,7 @@ function EditProjectPage() {
                   </h4>
                 </div>
                 <button onClick={addHeaderElement} className="add-btn">
-                  Add Item
+                  Add Menu Item
                 </button>
                 {headerElements.map((el) => (
                   <div key={el.id} className="nav-edit-item">
@@ -774,7 +774,7 @@ function EditProjectPage() {
                 </div>
 
                 <button onClick={addFooterElement} className="add-btn">
-                  Add Item
+                  Add Menu Item
                 </button>
                 {footerElements.map((el) => (
                   <div key={el.id} className="footer-edit-item">

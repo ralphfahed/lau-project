@@ -95,7 +95,7 @@ def register():
         db_session.close()
 
 
-@app.route("/login", methods=["POST"])
+@app.route("/", methods=["POST"])
 def login():
     db_session = Session()  # New DB session for this request
     try:

@@ -51,7 +51,7 @@ const Navbar = () => {
       credentials: "include",
     }).then(() => {
       setUserName(null);
-      navigate("/login"); // redirect to login page after logout
+      navigate("/"); // redirect to login page after logout
     });
   };
 
@@ -85,7 +85,7 @@ const Navbar = () => {
           {userName ? (
             <UserMenu userName={userName} onLogout={handleLogout} />
           ) : (
-            <Link to="/login">Login</Link> // eza ken log in farje usermenu eza no khedo 3l login
+            <Link to="/">Login</Link> // eza ken log in farje usermenu eza no khedo 3l login
           )}
         </div>
       </div>

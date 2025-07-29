@@ -177,3 +177,9 @@ button {
   align-items: center;
   justify-content: center;
 }
+/* When screen width is less than 700px */
+@media (max-width: 450px) {
+  .wrapper {
+    width: 300px;
+  }
+}

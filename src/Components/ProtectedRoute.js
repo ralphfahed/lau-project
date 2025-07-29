@@ -25,7 +25,7 @@ const ProtectedRoute = ({ children }) => {
     return <div>Loading...</div>; // or a spinner component
   }
 
-  return isLoggedIn ? children : <Navigate to="/login" replace />;
+  return isLoggedIn ? children : <Navigate to="/" replace />;
 };
 
 export default ProtectedRoute;

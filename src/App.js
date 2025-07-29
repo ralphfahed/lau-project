@@ -17,7 +17,7 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/login" element={<LoginRegister action="login" />} />
+        <Route path="/" element={<LoginRegister action="" />} />
 
         <Route
           path="/home"
