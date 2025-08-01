@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../layout/Navbar.css"; // Make sure this path is correct
 import { Link, useNavigate } from "react-router-dom";
+import repairIcon from "../../Components/Assets/repairIcon.svg";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -73,12 +74,7 @@ const Navbar = () => {
       {/* Welcome Section */}
       <div id="welcome">
         <div id="icon">
-          <img
-            src="https://cdn.vectorstock.com/i/1000x1000/68/56/location-chalk-white-icon-on-black-background-vector-31586856.webp"
-            width="35"
-            height="35"
-            alt="Logo"
-          />
+          <img src={repairIcon} width="35" height="35" alt="Logo" />
         </div>
 
         <div>
