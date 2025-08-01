@@ -34,9 +34,12 @@ const CreateProjectPage = () => {
       return;
     }
 
-    const existingProjects = JSON.parse(localStorage.getItem("projects")) || [];
+    const loggedInUser = localStorage.getItem("loggedInUser");
+    const userStorageKey = `projects-${loggedInUser}`;
 
-    // Check for duplicate project title (case-insensitive)
+    const existingProjects =
+      JSON.parse(localStorage.getItem(userStorageKey)) || [];
+
     const isDuplicate = existingProjects.some(
       (p) => p.name.toLowerCase() === title.trim().toLowerCase()
     );
@@ -56,7 +59,7 @@ const CreateProjectPage = () => {
     };
 
     const updatedProjects = [...existingProjects, newProject];
-    localStorage.setItem("projects", JSON.stringify(updatedProjects));
+    localStorage.setItem(userStorageKey, JSON.stringify(updatedProjects));
 
     toast.success("Project created successfully!", {
       position: "top-center",
@@ -64,7 +67,7 @@ const CreateProjectPage = () => {
       onClose: () => navigate("/projects"),
     });
 
-    setError(""); // Clear any error after successful creation
+    setError(""); // Clear error after success
   };
 
   const handleBackClick = () => {

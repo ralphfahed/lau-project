@@ -23,7 +23,9 @@ function EditPage() {
     }
 
     // Load project and page name from localStorage
-    const projectData = JSON.parse(localStorage.getItem("projects")) || [];
+    const loggedInUser = localStorage.getItem("loggedInUser") || "defaultUser";
+    const userStorageKey = `projects-${loggedInUser}`;
+    const projectData = JSON.parse(localStorage.getItem(userStorageKey)) || [];
     const currentProject = projectData.find(
       (p) => String(p.id) === String(projectId)
     );

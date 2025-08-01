@@ -113,6 +113,7 @@ const LoginRegister = () => {
     })
       .then((response) => {
         setLoading(false); // Stop loading
+        localStorage.setItem("loggedInUser", username);
 
         if (response.ok) {
           // // Optional: store auth flag
@@ -209,15 +210,7 @@ const LoginRegister = () => {
     }
   };
 
-  // Toggle between login and register forms
-  //If action === "login", show the login form
-  //If action === "register", show the register form
-  //If action === "", show nothing or a default
   const [action, setAction] = useState("");
-
-  //This function resets the registration form and tells your app to switch to the registration view.
-  //It’s usually called when the user clicks a “Register” link or button.
-  //function registerLink is used on click of the register => chaghleta tfade linputs
 
   function registerLink() {
     setAction("active");
@@ -245,13 +238,6 @@ const LoginRegister = () => {
     sessionStorage.removeItem("rememberedUsername");
   }
 
-  //<div className={wrapper ${action}}>
-  //This div has a class wrapper plus whatever the value of the React state variable action is.
-  // For example, if action is "active", the full class becomes "wrapper active". This is useful for toggling styles, like showing/hiding forms.
-  //
-  //
-  //
-  //
   return (
     <div className="login-page">
       <ToastContainer position="top-right" autoClose={3000} />

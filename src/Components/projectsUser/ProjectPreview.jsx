@@ -10,9 +10,12 @@ function ProjectPreview() {
   const [designData, setDesignData] = useState({});
   const [globalDesign, setGlobalDesign] = useState(null);
   const [selectedPageId, setSelectedPageId] = useState(null);
+  const [showMenu, setShowMenu] = useState(false); // add this state
 
   useEffect(() => {
-    const allProjects = JSON.parse(localStorage.getItem("projects")) || [];
+    const loggedInUser = localStorage.getItem("loggedInUser") || "defaultUser";
+    const userStorageKey = `projects-${loggedInUser}`;
+    const allProjects = JSON.parse(localStorage.getItem(userStorageKey)) || [];
     const selectedProject = allProjects.find(
       (p) => String(p.id) === String(projectId)
     );
@@ -140,8 +143,24 @@ function ProjectPreview() {
               className="pp-user-icon"
             />
           )}
-          {globalDesign?.headerElements &&
-            renderElements(globalDesign.headerElements)}
+
+          {/* Navigation wrapper */}
+          <div className="nav-wrapper">
+            {/* Nav links for desktop */}
+            <div className={`nav-links ${showMenu ? "show" : ""}`}>
+              {globalDesign?.headerElements &&
+                renderElements(globalDesign.headerElements)}
+            </div>
+
+            {/* Burger button for mobile */}
+            <button
+              className="burger-button"
+              onClick={() => setShowMenu((prev) => !prev)}
+              aria-label="Toggle navigation menu"
+            >
+              &#9776;
+            </button>
+          </div>
         </header>
       )}
 

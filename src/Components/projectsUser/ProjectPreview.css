@@ -23,6 +23,7 @@ body {
   border-radius: 4px;
   margin: 0; /* Remove default margin */
   flex-shrink: 0; /* Prevent footer from shrinking */
+  justify-content: center;
 }
 
 /* Body container fills remaining vertical space */
@@ -120,4 +121,113 @@ body {
 /* Remove any margin from paragraphs inside .body-cont */
 .body-cont p {
   margin: 0;
+}
+
+.pp-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* icon left, others right */
+  gap: 1rem;
+  flex-wrap: nowrap;
+  border-radius: 4px;
+  margin: 0;
+  position: relative;
+}
+
+/* Left container for icon */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Burger button hidden by default */
+.burger-button {
+  display: none;
+  font-size: 1.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+}
+
+/* Nav links default visible (horizontal) */
+.nav-links {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: nowrap;
+}
+
+/* --- Responsive Layout --- */
+
+/* Tablets: 2 cards per row */
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .nav-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* keep nav links left aligned */
+    position: relative; /* to position dropdown menu absolutely if needed */
+    width: 100%;
+  }
+
+  .burger-button {
+    display: block;
+    margin-left: auto; /* pushes burger button to the right */
+    font-size: 1.5rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+  }
+
+  .nav-links {
+    display: none;
+    flex-direction: column;
+    position: absolute; /* position dropdown below */
+    top: 100%; /* right below nav-wrapper */
+    right: 0;
+    background-color: #1e40af; /* match header bg */
+    width: 200px;
+    border-radius: 0 0 4px 4px;
+    padding: 0.5rem 1rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+  }
+
+  .nav-links.show {
+    display: flex;
+  }
+}
+
+/* Mobile: 1 card per row */
+@media (max-width: 600px) {
+  .pp-header {
+    flex-direction: row; /* 👈 keep row, NOT column */
+    justify-content: space-between; /* 👈 space between icon & burger */
+    align-items: center;
+  }
+
+  .pp-user-icon {
+    margin-bottom: 0; /* 👈 remove bottom margin */
+  }
+
+  .nav-wrapper {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end; /* 👈 ensure burger stays right */
+    align-items: center;
+  }
+
+  .pp-footer {
+    flex-direction: column;
+    padding: 1rem;
+  }
+
+  /* Force one card per row */
+  .body-container > section > div {
+    flex: 0 0 100% !important;
+  }
 }

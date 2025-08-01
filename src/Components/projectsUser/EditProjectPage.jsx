@@ -89,22 +89,46 @@ function EditProjectPage() {
   ]);
 
   useEffect(() => {
-    const storedProjects = JSON.parse(localStorage.getItem("projects")) || [];
+    const loggedInUser = localStorage.getItem("loggedInUser");
+    const userProjectsKey = `projects-${loggedInUser}`;
+    let storedProjects = [];
+    try {
+      storedProjects = JSON.parse(localStorage.getItem(userProjectsKey)) || [];
+    } catch {
+      storedProjects = [];
+    }
+
     const selectedProject = storedProjects.find((p) => p.id === numericId);
     if (selectedProject) {
-      selectedProject.id = Number(selectedProject.id);
-      const normalizedPages = (selectedProject.pages || []).map((page) =>
+      const selectedProjectCopy = {
+        ...selectedProject,
+        id: Number(selectedProject.id),
+      };
+
+      let normalizedPages = (selectedProjectCopy.pages || []).map((page) =>
         typeof page === "string"
           ? { id: Date.now() + Math.random(), name: page }
           : page
       );
-      setProject(selectedProject);
-      setTitle(selectedProject.name);
-      setDescription(selectedProject.description);
+
+      // Save back if any page was a string to keep stable IDs on reload
+      const needsSave = (selectedProjectCopy.pages || []).some(
+        (p) => typeof p === "string"
+      );
+      if (needsSave) {
+        selectedProjectCopy.pages = normalizedPages;
+        const updatedProjects = storedProjects.map((p) =>
+          p.id === numericId ? selectedProjectCopy : p
+        );
+        localStorage.setItem(userProjectsKey, JSON.stringify(updatedProjects));
+      }
+
+      setProject(selectedProjectCopy);
+      setTitle(selectedProjectCopy.name);
+      setDescription(selectedProjectCopy.description);
       setPages(normalizedPages);
     }
   }, [numericId]);
-
   useEffect(() => {
     if (!project) return;
 
@@ -198,7 +222,10 @@ function EditProjectPage() {
       return;
     }
 
-    const storedProjects = JSON.parse(localStorage.getItem("projects")) || [];
+    const loggedInUser = localStorage.getItem("loggedInUser") || "defaultUser";
+    const userStorageKey = `projects-${loggedInUser}`;
+    const storedProjects =
+      JSON.parse(localStorage.getItem(userStorageKey)) || [];
 
     const isDuplicate = storedProjects.some(
       (p) =>
@@ -246,7 +273,7 @@ function EditProjectPage() {
       p.id === project.id ? updatedProject : p
     );
 
-    localStorage.setItem("projects", JSON.stringify(updatedProjects));
+    localStorage.setItem(userStorageKey, JSON.stringify(updatedProjects));
 
     saveDesignData();
 
@@ -277,11 +304,15 @@ function EditProjectPage() {
 
     setConfirmDeletePageId(null);
 
-    const storedProjects = JSON.parse(localStorage.getItem("projects") || "[]");
+    const loggedInUser = localStorage.getItem("loggedInUser") || "defaultUser";
+    const userStorageKey = `projects-${loggedInUser}`;
+    const storedProjects = JSON.parse(
+      localStorage.getItem(userStorageKey) || "[]"
+    );
     const updatedProjects = storedProjects.map((p) =>
       p.id === numericId ? { ...p, pages: newPages } : p
     );
-    localStorage.setItem("projects", JSON.stringify(updatedProjects));
+    localStorage.setItem(userStorageKey, JSON.stringify(updatedProjects));
 
     toast.success("Page deleted successfully!", {
       position: "top-center",
@@ -339,25 +370,6 @@ function EditProjectPage() {
       return updatedHeaderEls;
     });
   };
-
-  // const handleAddPage = () => {
-  //   console.log("Add Page clicked"); // Debug
-
-  //   if (!newPageName.trim()) {
-  //     console.log("New page name empty, not adding");
-  //     return;
-  //   }
-
-  //   const newPage = {
-  //     id: Date.now().toString(),
-  //     name: newPageName.trim(),
-  //     source: "header",
-  //     design: { header: {}, bodyCards: [], footer: {} },
-  //   };
-
-  //   setPages((prevPages) => [...prevPages, newPage]);
-  //   setNewPageName("");
-  // };
 
   const addHeaderElement = () => {
     const newId = Date.now();
@@ -451,8 +463,7 @@ function EditProjectPage() {
       id: newId.toString(),
       pageId: newId,
       content: `New Footer Item ${newItemCount}`,
-
-      color: "#ffffffff",
+      color: "#ffffff",
       fontSize: 14,
       fontFamily: "Inter",
     };

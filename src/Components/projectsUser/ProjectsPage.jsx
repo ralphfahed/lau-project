@@ -13,54 +13,31 @@ function ProjectsPage() {
   const [projects, setProjects] = useState([]);
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
+  const loggedInUser = localStorage.getItem("loggedInUser");
+  const userStorageKey = `projects-${loggedInUser}`;
+
   useEffect(() => {
-    const storedProjects = JSON.parse(localStorage.getItem("projects")) || [];
+    const storedProjects =
+      JSON.parse(localStorage.getItem(userStorageKey)) || [];
     setProjects(storedProjects);
-  }, []);
+  }, [userStorageKey]);
 
-  // const clearProjectDesignData = (projectId) => {
-  //   const prefix = `EditPageDesign-project-${projectId}-`;
-  //   for (let i = 0; i < localStorage.length; i++) {
-  //     const key = localStorage.key(i);
-  //     if (key && key.startsWith(prefix)) {
-  //       localStorage.removeItem(key);
-  //       i--;
-  //     }
-  //   }
-  // };
-
-  // const deleteProject = (id) => {
-  //   const projectToDelete = projects.find((project) => project.id === id);
-  //   if (projectToDelete) {
-  //     clearProjectDesignData(projectToDelete.id);
-  //   }
-
-  //   const updatedProjects = projects.filter((project) => project.id !== id);
-  //   localStorage.setItem("projects", JSON.stringify(updatedProjects));
-  //   setProjects(updatedProjects);
-  //   toast.success("Project deleted successfully!", {
-  //     position: "top-center",
-  //     autoClose: 1000,
-  //   });
-  //   setConfirmDeleteId(null);
-  // };
   const deleteProjectAndDesignData = (id) => {
-    // Remove project from the projects list
     const updatedProjects = projects.filter((project) => project.id !== id);
-    localStorage.setItem("projects", JSON.stringify(updatedProjects));
+    localStorage.setItem(userStorageKey, JSON.stringify(updatedProjects));
     setProjects(updatedProjects);
 
     // Remove all design data related to this project
     const prefix = `EditPageDesign-project-${id}-`;
+    const keysToRemove = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
       if (key && key.startsWith(prefix)) {
-        localStorage.removeItem(key);
-        i--;
+        keysToRemove.push(key);
       }
     }
+    keysToRemove.forEach((key) => localStorage.removeItem(key));
 
-    // Hide the delete confirmation popup
     setConfirmDeleteId(null);
   };
 
@@ -98,7 +75,6 @@ function ProjectsPage() {
         <table className="projects-table">
           <thead>
             <tr>
-              {/* Removed <th>ID</th> */}
               <th>Project Name</th>
               <th>Description</th>
               <th>Actions</th>
@@ -108,7 +84,6 @@ function ProjectsPage() {
             {filteredAndSortedProjects.length > 0 ? (
               filteredAndSortedProjects.map(({ id, name, description }) => (
                 <tr key={id}>
-                  {/* Removed <td>{id}</td> */}
                   <td>{name}</td>
                   <td>{description || "No description"}</td>
                   <td>
