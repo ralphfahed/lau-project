@@ -110,7 +110,7 @@ function EditPage() {
   return (
     <div className="container">
       <Navbar />
-      <button onClick={handleBackClick} className="back-button">
+      <button onClick={handleBackClick} className="back-button-body">
         ← Back
       </button>
 

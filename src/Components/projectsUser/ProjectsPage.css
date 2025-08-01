@@ -30,7 +30,7 @@
 
 /* Header styling */
 .projects-table th {
-  background-color: #ff4c4c;
+  background-color: #2563eb;
   color: white;
 }
 
@@ -108,8 +108,13 @@
   background-color: #dc2626;
 }
 
+.action-button.view {
+  background-color: #3b82f6; /* Tailwind Blue-500, lighter than Edit */
+  color: white;
+}
+
 .action-button:hover {
-  background-color: #1d4ed8;
+  background-color: #3b82f6;
 }
 
 .action-button.delete:hover {

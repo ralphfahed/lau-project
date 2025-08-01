@@ -887,13 +887,15 @@ function EditProjectPage() {
               <div className="page-buttons">
                 <button
                   className="edit-content-button"
-                  onClick={() =>
-                    navigate(`/projects/${project.id}/page/${page.id}/edit`)
-                  }
+                  onClick={async () => {
+                    await handleSave(); // save current project changes
+                    navigate(`/projects/${project.id}/page/${page.id}/edit`);
+                  }}
                   title="Edit Page Content"
                 >
                   <FaWrench />
                 </button>
+
                 <button
                   onClick={() => handleRequestDeletePage(i)}
                   title="Delete Page"

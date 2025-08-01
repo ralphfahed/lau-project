@@ -77,18 +77,11 @@ const CreateProjectPage = () => {
   return (
     <div className="page-wrapper">
       <Navbar />
-      <button onClick={handleBackClick} className="back-button">
-        ← back
-      </button>
-      <div className="create-project-container">
-        {/* <div className="image-text">
-          <img
-            src="https://images.pexels.com/photos/3184296/pexels-photo-3184296.jpeg?auto=compress&cs=tinysrgb&w=400"
-            alt="Project Creation"
-            className=""
-          />
-        </div> */}
 
+      <div className="create-project-container">
+        <button onClick={handleBackClick} className="back-button">
+          ← back
+        </button>
         <form onSubmit={handleSubmit} className="create-project-form">
           <div className="form-group">
             <h1 className="title-create-proj">Create New Project</h1>

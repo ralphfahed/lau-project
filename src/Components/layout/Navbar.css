@@ -21,8 +21,9 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #ff4c4c;
-  color: white;
+  background-color: #f1f5f9; /* light gray */
+  border: 2px solid #4f46e5; /* accent border to match button */
+  color: black;
   font-weight: bold;
   font-size: 20px;
   display: flex;
