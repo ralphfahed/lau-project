@@ -49,9 +49,7 @@ function EditProjectPage() {
 
   const [footerElements, setFooterElements] = useState([]);
 
-  const [userIcon, setUserIcon] = useState(
-    "https://images.pexels.com/photos/1040880/pexels-photo-1040880.jpeg?auto=compress&cs=tinysrgb&w=400"
-  );
+  const [userIcon, setUserIcon] = useState("");
 
   const saveDesignData = useCallback(() => {
     try {
